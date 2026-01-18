@@ -5,8 +5,8 @@
 // source: auth.proto
 
 /* eslint-disable */
-import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
-import { Empty } from "./google/protobuf/empty";
+import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
+import { Observable } from "rxjs";
 
 export const protobufPackage = "auth.v1";
 
@@ -19,193 +19,29 @@ export interface SendOtpResponse {
   ok: boolean;
 }
 
-function createBaseSendOtpRequest(): SendOtpRequest {
-  return { identifier: "", type: "" };
+export const AUTH_V1_PACKAGE_NAME = "auth.v1";
+
+export interface AuthServiceClient {
+  sendOtp(request: SendOtpRequest): Observable<SendOtpResponse>;
 }
 
-export const SendOtpRequest: MessageFns<SendOtpRequest> = {
-  encode(message: SendOtpRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.identifier !== "") {
-      writer.uint32(10).string(message.identifier);
-    }
-    if (message.type !== "") {
-      writer.uint32(18).string(message.type);
-    }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): SendOtpRequest {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseSendOtpRequest();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 10) {
-            break;
-          }
-
-          message.identifier = reader.string();
-          continue;
-        }
-        case 2: {
-          if (tag !== 18) {
-            break;
-          }
-
-          message.type = reader.string();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): SendOtpRequest {
-    return {
-      identifier: isSet(object.identifier) ? globalThis.String(object.identifier) : "",
-      type: isSet(object.type) ? globalThis.String(object.type) : "",
-    };
-  },
-
-  toJSON(message: SendOtpRequest): unknown {
-    const obj: any = {};
-    if (message.identifier !== "") {
-      obj.identifier = message.identifier;
-    }
-    if (message.type !== "") {
-      obj.type = message.type;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<SendOtpRequest>, I>>(base?: I): SendOtpRequest {
-    return SendOtpRequest.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<SendOtpRequest>, I>>(object: I): SendOtpRequest {
-    const message = createBaseSendOtpRequest();
-    message.identifier = object.identifier ?? "";
-    message.type = object.type ?? "";
-    return message;
-  },
-};
-
-function createBaseSendOtpResponse(): SendOtpResponse {
-  return { ok: false };
+export interface AuthServiceController {
+  sendOtp(request: SendOtpRequest): Promise<SendOtpResponse> | Observable<SendOtpResponse> | SendOtpResponse;
 }
 
-export const SendOtpResponse: MessageFns<SendOtpResponse> = {
-  encode(message: SendOtpResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.ok !== false) {
-      writer.uint32(8).bool(message.ok);
+export function AuthServiceControllerMethods() {
+  return function (constructor: Function) {
+    const grpcMethods: string[] = ["sendOtp"];
+    for (const method of grpcMethods) {
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcMethod("AuthService", method)(constructor.prototype[method], method, descriptor);
     }
-    return writer;
-  },
-
-  decode(input: BinaryReader | Uint8Array, length?: number): SendOtpResponse {
-    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
-    const end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseSendOtpResponse();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1: {
-          if (tag !== 8) {
-            break;
-          }
-
-          message.ok = reader.bool();
-          continue;
-        }
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skip(tag & 7);
+    const grpcStreamMethods: string[] = [];
+    for (const method of grpcStreamMethods) {
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcStreamMethod("AuthService", method)(constructor.prototype[method], method, descriptor);
     }
-    return message;
-  },
-
-  fromJSON(object: any): SendOtpResponse {
-    return { ok: isSet(object.ok) ? globalThis.Boolean(object.ok) : false };
-  },
-
-  toJSON(message: SendOtpResponse): unknown {
-    const obj: any = {};
-    if (message.ok !== false) {
-      obj.ok = message.ok;
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<SendOtpResponse>, I>>(base?: I): SendOtpResponse {
-    return SendOtpResponse.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<SendOtpResponse>, I>>(object: I): SendOtpResponse {
-    const message = createBaseSendOtpResponse();
-    message.ok = object.ok ?? false;
-    return message;
-  },
-};
-
-export interface AuthService {
-  SendOtp(request: SendOtpRequest): Promise<SendOtpResponse>;
-  Ping(request: Empty): Promise<SendOtpResponse>;
+  };
 }
 
-export const AuthServiceServiceName = "auth.v1.AuthService";
-export class AuthServiceClientImpl implements AuthService {
-  private readonly rpc: Rpc;
-  private readonly service: string;
-  constructor(rpc: Rpc, opts?: { service?: string }) {
-    this.service = opts?.service || AuthServiceServiceName;
-    this.rpc = rpc;
-    this.SendOtp = this.SendOtp.bind(this);
-    this.Ping = this.Ping.bind(this);
-  }
-  SendOtp(request: SendOtpRequest): Promise<SendOtpResponse> {
-    const data = SendOtpRequest.encode(request).finish();
-    const promise = this.rpc.request(this.service, "SendOtp", data);
-    return promise.then((data) => SendOtpResponse.decode(new BinaryReader(data)));
-  }
-
-  Ping(request: Empty): Promise<SendOtpResponse> {
-    const data = Empty.encode(request).finish();
-    const promise = this.rpc.request(this.service, "Ping", data);
-    return promise.then((data) => SendOtpResponse.decode(new BinaryReader(data)));
-  }
-}
-
-interface Rpc {
-  request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
-}
-
-type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
-
-export type DeepPartial<T> = T extends Builtin ? T
-  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
-  : Partial<T>;
-
-type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
-
-function isSet(value: any): boolean {
-  return value !== null && value !== undefined;
-}
-
-export interface MessageFns<T> {
-  encode(message: T, writer?: BinaryWriter): BinaryWriter;
-  decode(input: BinaryReader | Uint8Array, length?: number): T;
-  fromJSON(object: any): T;
-  toJSON(message: T): unknown;
-  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
-  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
-}
+export const AUTH_SERVICE_NAME = "AuthService";
