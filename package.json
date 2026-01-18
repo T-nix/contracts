@@ -1,0 +1,13 @@
+{
+  "name": "@t-nix/contracts",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "generate": "npx protoc -I ./proto ./proto/*.proto --ts_proto_out=./gen --ts_proto_opt=nestJs,package=omit"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "grpc-tools": "^1.13.1",
+    "ts-proto": "^2.11.0"
+  }
+}
