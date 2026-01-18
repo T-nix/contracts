@@ -1,6 +1,6 @@
 {
   "name": "@t-nix/contracts",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "index.js",
   "scripts": {
     "generate": "npx protoc -I ./proto ./proto/*.proto --ts_proto_out=./gen --ts_proto_opt=nestJs=true,package=omit"
@@ -23,7 +23,7 @@
     "rxjs": "^7.8.2"
   },
   "files": [
-    "proto", 
+    "proto",
     "gen"
   ]
 }
