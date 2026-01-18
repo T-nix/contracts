@@ -5,6 +5,14 @@
   "scripts": {
     "generate": "npx protoc -I ./proto ./proto/*.proto --ts_proto_out=./gen --ts_proto_opt=nestJs,package=omit"
   },
+  "type": "module",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/T-nix/prettier.git"
+  },
   "license": "ISC",
   "devDependencies": {
     "grpc-tools": "^1.13.1",
