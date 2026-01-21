@@ -22,6 +22,15 @@ jobs:
           node-version: 20
           registry-url: https://npm.pkg.github.com/
 
+      - name: Configure scoped registries
+        run: |
+          # Set t-nix packages registry with company token
+          npm config set @t-nix:registry https://npm.pkg.github.com
+          npm config set //npm.pkg.github.com/:_authToken=${{ secrets.SECRET_TOKEN }}
+
+          # Set T-nix packages registry with company token
+          npm config set @T-nix:registry https://npm.pkg.github.com
+          npm config set //npm.pkg.github.com/:_authToken=${{ secrets.SECRET_TOKEN }}
       - run: npm ci
 
       - name: Build
