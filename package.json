@@ -7,7 +7,7 @@
     "build": "tsc -p tsconfig.build.json",
     "generate": "npx protoc -I ./proto ./proto/*.proto --ts_proto_out=./gen --ts_proto_opt=nestJs=true,package=omit"
   },
-  "type": "module",
+  "type": "commonjs",
   "publishConfig": {
     "registry": "https://npm.pkg.github.com/"
   },
