@@ -1,0 +1,199 @@
+syntax = "proto3";
+
+package csr.v1;
+
+
+/* ===========================
+   CORE ENTITIES
+   =========================== */
+
+message Subject {
+  string id = 1;
+  SubjectType type = 2;
+  string external_id = 3;
+  string company_id = 4;
+}
+
+enum SubjectType {
+  SUBJECT_TYPE_UNSPECIFIED = 0;
+  USER = 1;
+  COMPANY = 2;
+  SERVICE = 3;
+}
+
+message Role {
+  string id = 1;
+  string code = 2;
+  string name = 3;
+  int32 level = 4;
+  bool is_delegatable = 5;
+  optional int32 max_depth = 6;
+}
+
+message Scope {
+  string type = 1; // seller, company, location
+  string value = 2; // seller-123
+}
+
+message Permission {
+  string name = 1; // product.publish
+  string resource = 2;
+  string action = 3;
+}
+
+/* ===========================
+   POLICY DECISION
+   =========================== */
+
+message PolicyDecision {
+  Decision decision = 1;
+  string permission = 2;
+  Role effective_role = 3;
+  Scope scope = 4;
+  PolicyExplain explain = 5;
+}
+
+enum Decision {
+  DECISION_UNSPECIFIED = 0;
+  ALLOW = 1;
+  DENY = 2;
+}
+
+/* ===========================
+   POLICY EXPLAINABILITY
+   =========================== */
+
+message PolicyExplain {
+  string matched_rule = 1;
+  string relation = 2; // ==, in, contains
+  map<string, string> entity_attributes = 3;
+
+  repeated DelegationStep delegation_path = 4;
+}
+
+message DelegationStep {
+  string from_subject_id = 1;
+  string to_subject_id = 2;
+  string role_code = 3;
+  Scope scope = 4;
+}
+
+/* ===========================
+   REQUESTS
+   =========================== */
+
+message CheckPermissionRequest {
+  Subject actor = 1;
+  string permission = 2;
+  Scope scope = 3;
+
+  // optional resource context
+  map<string, string> entity_attributes = 4;
+}
+
+message CheckPermissionResponse {
+  PolicyDecision result = 1;
+}
+
+/* ===========================
+   DELEGATION
+   =========================== */
+
+message CreateDelegationRequest {
+  string parent_subject_id = 1;
+  string child_subject_id = 2;
+  string role_code = 3;
+  Scope scope = 4;
+}
+
+message CreateDelegationResponse {
+  bool success = 1;
+}
+
+message ListDelegationsRequest {
+  string subject_id = 1;
+  Scope scope = 2;
+}
+
+message ListDelegationsResponse {
+  repeated Delegation delegations = 1;
+}
+
+message Delegation {
+  string id = 1;
+  string parent_subject_id = 2;
+  string child_subject_id = 3;
+  Role role = 4;
+  Scope scope = 5;
+  int32 depth = 6;
+}
+
+/* ===========================
+   ROLE ASSIGNMENT
+   =========================== */
+
+message AssignRoleRequest {
+  string subject_id = 1;
+  string role_code = 2;
+  Scope scope = 3;
+}
+
+message AssignRoleResponse {
+  bool success = 1;
+}
+
+/* ===========================
+   PERMISSION SYNC (SDK → CSR)
+   =========================== */
+
+message SyncPermissionsRequest {
+  string service_name = 1;
+  repeated Permission permissions = 2;
+  bool hidden = 3; // build-time defaults
+}
+
+message SyncPermissionsResponse {
+  string policy_version = 1;
+}
+
+/* ===========================
+   CACHE / VERSIONING
+   =========================== */
+
+message GetPolicyVersionRequest {
+  string company_id = 1;
+}
+
+message GetPolicyVersionResponse {
+  string policy_version = 1;
+}
+
+/* ===========================
+   SERVICE DEFINITION
+   =========================== */
+
+service CSRService {
+
+  // 🔐 Core authorization check
+  rpc CheckPermission(CheckPermissionRequest)
+      returns (CheckPermissionResponse);
+
+  // 🔁 Delegation management
+  rpc CreateDelegation(CreateDelegationRequest)
+      returns (CreateDelegationResponse);
+
+  rpc ListDelegations(ListDelegationsRequest)
+      returns (ListDelegationsResponse);
+
+  // 🎭 Role assignment
+  rpc AssignRole(AssignRoleRequest)
+      returns (AssignRoleResponse);
+
+  // 🔄 Permission sync from services
+  rpc SyncPermissions(SyncPermissionsRequest)
+      returns (SyncPermissionsResponse);
+
+  // 🧠 Policy versioning
+  rpc GetPolicyVersion(GetPolicyVersionRequest)
+      returns (GetPolicyVersionResponse);
+}
