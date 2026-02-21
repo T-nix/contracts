@@ -6,19 +6,22 @@ export const PROTO_PATHS = {
         file: join(__dirname, '../../proto/auth.proto'),
         host: 'localhost',
         port: 50001,
-        version: 'auth.v1'
+        version: 'auth.v1',
+        serviceName: 'AuthService'
     },
     permission: {
         file: join(__dirname, '../../proto/permission.proto'),
         host: 'localhost',
         port: 50002,
-        version: 'permission.v1'
+        version: 'permission.v1',
+        serviceName: 'PermissionService'
     },
     user: {
         file: join(__dirname, '../../proto/user.proto'),
         host: 'localhost',
         port: 50003,
-        version: 'user.v1'
+        version: 'user.v1',
+        serviceName: 'UserService'
     }
 } as const
 
@@ -26,7 +29,8 @@ export type ProtoKey = keyof typeof PROTO_PATHS;
 export interface ServiceConfig {
     file: string,
     url: string,
-    packageVersion: string
+    packageVersion: string,
+    serviceName: string
 }
 
 export function  getServiceConfig(serviceName: ProtoKey, config: ConfigService): ServiceConfig {
@@ -37,6 +41,8 @@ export function  getServiceConfig(serviceName: ProtoKey, config: ConfigService):
     return {
         file,
         url: `${host}:${port}`,
-        packageVersion
+        packageVersion,
+        serviceName: PROTO_PATHS[serviceName].serviceName
+    
     }
 }

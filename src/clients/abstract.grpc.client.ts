@@ -5,7 +5,7 @@ import { InjectGrpcClient } from './decorators'
 
 type UnwrapObservable<U> = U extends Observable<infer R> ? R : U
 
-export abstract class AbstractGrpcClient1<T extends Record<string, any>> implements OnModuleInit {
+export abstract class AbstractGrpcClient<T extends Record<string, any>> implements OnModuleInit {
     protected service!: T
  
     public constructor( 
@@ -31,44 +31,3 @@ export abstract class AbstractGrpcClient1<T extends Record<string, any>> impleme
         }
     }
 }
-
-/*
-export abstract class AbstractGrpcClient<T>
-  implements OnModuleInit
-{
-  protected service!: T;
-
-  protected constructor(
-    protected readonly client: ClientGrpc,
-    protected readonly serviceName: string,
-  ) {}
-
-  onModuleInit() {
-    this.service = this.client.getService<T>(
-      this.serviceName,
-    );
-  }
-}
-
-export interface GetConfigRequest {
-  env: string;
-}
-
-export interface ConfigServiceClient {
-  getConfig(req: GetConfigRequest): Promise<any>;
-}
-
-export class ConfigClient extends AbstractGrpcClient<ConfigServiceClient> {
-  getConfig(req: GetConfigRequest) {
-    return this.service.getConfig(req);
-  }
-}
-
-export const CLIENT_WRAPPERS = {
-  CONFIG: {
-    wrapper: ConfigClient,
-    grpcServiceName: 'ConfigService',
-    package: 'config',
-  },
-};
-*/
