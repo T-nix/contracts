@@ -1,10 +1,19 @@
 syntax = "proto3";
+import "user.proto";
 
 package auth.v1;
 
 service AuthService {
     rpc SendOtp (SendOtpRequest) returns (SendOtpResponse);
     rpc VerifyOtp (VerifyOtpRequest) returns (VerifyOtpResponse);
+    rpc RegisterUser (user.v1.CreateUserRequest) returns (user.v1.UserResponse);
+    rpc LoginUser (LoginUserRequest) returns (user.v1.UserResponse);
+    rpc RefreshToken (RefreshTokenRequest) returns (RefreshTokenResponse);
+    rpc LogoutUser (LogoutUserRequest) returns (LogoutUserResponse);
+    rpc ForgotPassword (ForgotPasswordRequest) returns (ForgotPasswordResponse);
+    rpc ResetPassword (ResetPasswordRequest) returns (ResetPasswordResponse);
+    rpc ProviderConnect (ProviderConnectRequest) returns (ProviderConnectResponse);
+    rpc ProviderCallback (ProviderCallbackRequest) returns (ProviderCallbackResponse);
 }
 
 message SendOtpRequest {
@@ -24,5 +33,64 @@ message VerifyOtpRequest {
 
 message VerifyOtpResponse {
     string aceess_token = 1;
+    string refresh_token = 2;
+}
+
+message LoginUserRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message RefreshTokenRequest {
+    string refresh_token = 1;
+}
+
+message RefreshTokenResponse {
+    string access_token = 1;
+    string refresh_token = 2;
+}
+
+message LogoutUserRequest {
+    string refresh_token = 1;
+}
+
+message LogoutUserResponse {
+    bool ok = 1;
+}
+
+message ForgotPasswordRequest {
+    string email = 1;
+}
+
+message ForgotPasswordResponse {
+    bool ok = 1;
+}
+
+message ResetPasswordRequest {
+    string token = 1;
+    string password = 2;
+    string password_confirm = 3;
+}
+
+message ResetPasswordResponse {
+    bool ok = 1;
+}
+
+message ProviderConnectRequest {
+    string provider = 1;
+}
+
+message ProviderConnectResponse {
+    bool ok = 1;
+    string url = 2;
+}
+
+message ProviderCallbackRequest {
+    string provider = 1;
+    string code = 2;
+}
+
+message ProviderCallbackResponse {
+    string access_token = 1;
     string refresh_token = 2;
 }

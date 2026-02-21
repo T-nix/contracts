@@ -7,6 +7,7 @@
 /* eslint-disable */
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
+import { CreateUserRequest, UserResponse } from "./user";
 
 export const protobufPackage = "auth.v1";
 
@@ -30,23 +31,137 @@ export interface VerifyOtpResponse {
   refreshToken: string;
 }
 
+export interface LoginUserRequest {
+  email: string;
+  password: string;
+}
+
+export interface RefreshTokenRequest {
+  refreshToken: string;
+}
+
+export interface RefreshTokenResponse {
+  accessToken: string;
+  refreshToken: string;
+}
+
+export interface LogoutUserRequest {
+  refreshToken: string;
+}
+
+export interface LogoutUserResponse {
+  ok: boolean;
+}
+
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ForgotPasswordResponse {
+  ok: boolean;
+}
+
+export interface ResetPasswordRequest {
+  token: string;
+  password: string;
+  passwordConfirm: string;
+}
+
+export interface ResetPasswordResponse {
+  ok: boolean;
+}
+
+export interface ProviderConnectRequest {
+  provider: string;
+}
+
+export interface ProviderConnectResponse {
+  ok: boolean;
+  url: string;
+}
+
+export interface ProviderCallbackRequest {
+  provider: string;
+  code: string;
+}
+
+export interface ProviderCallbackResponse {
+  accessToken: string;
+  refreshToken: string;
+}
+
 export const AUTH_V1_PACKAGE_NAME = "auth.v1";
 
 export interface AuthServiceClient {
   sendOtp(request: SendOtpRequest): Observable<SendOtpResponse>;
 
   verifyOtp(request: VerifyOtpRequest): Observable<VerifyOtpResponse>;
+
+  registerUser(request: CreateUserRequest): Observable<UserResponse>;
+
+  loginUser(request: LoginUserRequest): Observable<UserResponse>;
+
+  refreshToken(request: RefreshTokenRequest): Observable<RefreshTokenResponse>;
+
+  logoutUser(request: LogoutUserRequest): Observable<LogoutUserResponse>;
+
+  forgotPassword(request: ForgotPasswordRequest): Observable<ForgotPasswordResponse>;
+
+  resetPassword(request: ResetPasswordRequest): Observable<ResetPasswordResponse>;
+
+  providerConnect(request: ProviderConnectRequest): Observable<ProviderConnectResponse>;
+
+  providerCallback(request: ProviderCallbackRequest): Observable<ProviderCallbackResponse>;
 }
 
 export interface AuthServiceController {
   sendOtp(request: SendOtpRequest): Promise<SendOtpResponse> | Observable<SendOtpResponse> | SendOtpResponse;
 
   verifyOtp(request: VerifyOtpRequest): Promise<VerifyOtpResponse> | Observable<VerifyOtpResponse> | VerifyOtpResponse;
+
+  registerUser(request: CreateUserRequest): Promise<UserResponse> | Observable<UserResponse> | UserResponse;
+
+  loginUser(request: LoginUserRequest): Promise<UserResponse> | Observable<UserResponse> | UserResponse;
+
+  refreshToken(
+    request: RefreshTokenRequest,
+  ): Promise<RefreshTokenResponse> | Observable<RefreshTokenResponse> | RefreshTokenResponse;
+
+  logoutUser(
+    request: LogoutUserRequest,
+  ): Promise<LogoutUserResponse> | Observable<LogoutUserResponse> | LogoutUserResponse;
+
+  forgotPassword(
+    request: ForgotPasswordRequest,
+  ): Promise<ForgotPasswordResponse> | Observable<ForgotPasswordResponse> | ForgotPasswordResponse;
+
+  resetPassword(
+    request: ResetPasswordRequest,
+  ): Promise<ResetPasswordResponse> | Observable<ResetPasswordResponse> | ResetPasswordResponse;
+
+  providerConnect(
+    request: ProviderConnectRequest,
+  ): Promise<ProviderConnectResponse> | Observable<ProviderConnectResponse> | ProviderConnectResponse;
+
+  providerCallback(
+    request: ProviderCallbackRequest,
+  ): Promise<ProviderCallbackResponse> | Observable<ProviderCallbackResponse> | ProviderCallbackResponse;
 }
 
 export function AuthServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["sendOtp", "verifyOtp"];
+    const grpcMethods: string[] = [
+      "sendOtp",
+      "verifyOtp",
+      "registerUser",
+      "loginUser",
+      "refreshToken",
+      "logoutUser",
+      "forgotPassword",
+      "resetPassword",
+      "providerConnect",
+      "providerCallback",
+    ];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("AuthService", method)(constructor.prototype[method], method, descriptor);
