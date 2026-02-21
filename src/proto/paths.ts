@@ -12,13 +12,13 @@ export const PROTO_PATHS = {
         file: join(__dirname, '../../proto/permission.proto'),
         host: 'localhost',
         port: 50002,
-        version: 'auth.v1'
+        version: 'permission.v1'
     },
     user: {
         file: join(__dirname, '../../proto/user.proto'),
         host: 'localhost',
         port: 50003,
-        version: 'auth.v1'
+        version: 'user.v1'
     }
 } as const
 
