@@ -15,7 +15,7 @@ message CreateUserRequest {
     string email = 2;
     string password = 3;
     optional string password_confirm = 4;
-    string phone = 4;
+    string phone = 5;
 }
 
 message GetUserByIdRequest {

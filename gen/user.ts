@@ -15,6 +15,7 @@ export interface CreateUserRequest {
   name: string;
   email: string;
   password: string;
+  passwordConfirm?: string | undefined;
   phone: string;
 }
 
