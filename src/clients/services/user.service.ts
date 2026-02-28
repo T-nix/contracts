@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { AbstractGrpcClient } from "../abstract.grpc.client";
+import { AbstractGrpcClient } from "./abstract.grpc.client";
 import { UserServiceClient } from "../../../gen/user";
 import { ClientGrpc } from "@nestjs/microservices";
 import { InjectGrpcClient } from "../decorators";

@@ -1,7 +1,7 @@
 import type { OnModuleInit, Type } from '@nestjs/common'
 import { ClientGrpc } from '@nestjs/microservices'
 import { lastValueFrom, type Observable } from 'rxjs'
-import { InjectGrpcClient } from './decorators'
+import { InjectGrpcClient } from '../decorators'
 
 type UnwrapObservable<U> = U extends Observable<infer R> ? R : U
 
