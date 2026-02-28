@@ -6,7 +6,8 @@ import {
 import { ClientGrpc } from '@nestjs/microservices';
 import { getServiceConfig, ProtoKey } from '../../proto';
 import { ConfigService } from '@nestjs/config';
-import { createGrpcClient, GrpcClientService } from './client.service';
+import { createGrpcClient } from './client.service';
+import { AbstractGrpcClient } from './abstract.grpc.client';
 
 @Injectable()
 export class GrpcClientsService implements OnModuleInit {
@@ -44,7 +45,7 @@ export class GrpcClientsService implements OnModuleInit {
     return service as T;
   }
 
-  use<T extends Record<string, any>>(key: string): GrpcClientService<T> {
+  use<T extends Record<string, any>>(key: string): AbstractGrpcClient<T> {
     const service = this.services.get(key);
 
     if (!service) {
