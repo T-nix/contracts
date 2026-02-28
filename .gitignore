@@ -3,3 +3,4 @@ node_modules/
 .npmrc
 .npmignore
 .husky/
+gen/
