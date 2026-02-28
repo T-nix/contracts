@@ -8,6 +8,7 @@ import { getServiceConfig, GrpcServices, ProtoKey } from '../../proto';
 import { ConfigService } from '@nestjs/config';
 import { createGrpcClient } from './client.service';
 import { AbstractGrpcClient } from './abstract.grpc.client';
+import { lastValueFrom } from 'rxjs';
 
 @Injectable()
 export class GrpcClientsService implements OnModuleInit {
@@ -31,7 +32,14 @@ export class GrpcClientsService implements OnModuleInit {
       }
       console.log(`Registry new client ${token}`)
       const getService = this.createGrpcGetter<GrpcServices>(client);
-      this.services.set(token, getService(cnf.serviceName as keyof GrpcServices));
+      const services = getService(cnf.serviceName as keyof GrpcServices)
+      Object.keys(services).forEach((method) => {
+        const original = services[method];
+        services[method] = (payload: any) =>
+          lastValueFrom(original.call(services, payload));
+      });
+      
+      this.services.set(token, services);
     }
   }
 
