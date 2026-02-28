@@ -1,9 +1,9 @@
 import { type DynamicModule, Module } from "@nestjs/common";
 import { GrpcClientFactory } from "./factory/grpc.client.factory";
 import { ConfigService } from "@nestjs/config";
-import { getServiceConfig, ProtoKey } from "../proto";
 
 import { GrpcClientsService } from "./services/clients.service";
+import { getServiceConfig, ProtoKey } from "../proto";
 
 @Module({})
 export class GrpcModule {
@@ -29,7 +29,6 @@ export class GrpcModule {
                                 url: cnf.url
                             })
                             factory.register(token, client)
-
                             map[token] = client;
                         });
                         return map;

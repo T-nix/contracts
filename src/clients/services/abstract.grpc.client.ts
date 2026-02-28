@@ -5,17 +5,12 @@ import { InjectGrpcClient } from '../decorators'
 
 type UnwrapObservable<U> = U extends Observable<infer R> ? R : U
 
-export abstract class AbstractGrpcClient<T extends Record<string, any>> implements OnModuleInit {
-    protected service!: T
- 
+export abstract class AbstractGrpcClient<T extends Record<string, any>> {
+
     public constructor( 
-        private readonly client: ClientGrpc,
+        private readonly service: T,
         private readonly serviceName: string
     ) {}
-
-    public onModuleInit() {
-        this.service = this.client.getService<T>(this.serviceName)
-    }
 
     public async call<K extends keyof T>(
         method: K, 

@@ -4,11 +4,11 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
-import { getServiceConfig, GrpcServices, ProtoKey } from '../../proto';
 import { ConfigService } from '@nestjs/config';
-import { createGrpcClient } from './client.service';
 import { AbstractGrpcClient } from './abstract.grpc.client';
 import { lastValueFrom } from 'rxjs';
+import { createGrpcClient } from './client.service';
+import { getServiceConfig, GrpcServices, ProtoKey } from '../../proto';
 
 @Injectable()
 export class GrpcClientsService implements OnModuleInit {
@@ -36,11 +36,6 @@ export class GrpcClientsService implements OnModuleInit {
       const getService = this.createGrpcGetter<GrpcServices>(client);
 
       const services = getService(cnf.serviceName as keyof GrpcServices)
-      Object.keys(services).forEach((method) => {
-        const original = services[method];
-        services[method] = (payload: any) =>
-          lastValueFrom(original.call(services, payload));
-      });
 
       this.services.set(token, services);
     }
@@ -59,13 +54,14 @@ export class GrpcClientsService implements OnModuleInit {
     }
     return service as T;
   }
-/*
+
   use<T extends Record<string, any>>(key: ProtoKey): AbstractGrpcClient<T> {
-    const client = this.clients[key];
+    const client = this.services.get(key);
+
     if (!client) {
       throw new Error(`gRPC service "${key}" not registered`);
     }
      
     return createGrpcClient<T>(client, key)
-  }*/
+  }
 }
