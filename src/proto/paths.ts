@@ -1,27 +1,44 @@
 import { ConfigService } from "@nestjs/config";
 import { join } from "path";
+import { UserServiceClient } from "../../gen/user";
+import { AuthServiceClient } from "../../gen/auth";
 
-export const PROTO_PATHS = {
+export type GrpcServices = {
+  UserService: UserServiceClient,
+  AuthService: AuthServiceClient,
+  PermissionService: any
+}
+
+export interface GrpcClientConfig {
+    file: string
+    host: string
+    port: number
+    version: string
+    serviceName: string
+}
+
+export const PROTO_PATHS: Record<string, GrpcClientConfig>= {
     auth: {
         file: join(__dirname, '../../proto/auth.proto'),
         host: 'localhost',
         port: 50001,
         version: 'auth.v1',
-        serviceName: 'AuthService'
+        serviceName: 'AuthService',
     },
+    
     permission: {
         file: join(__dirname, '../../proto/permission.proto'),
         host: 'localhost',
         port: 50002,
         version: 'permission.v1',
-        serviceName: 'PermissionService'
+        serviceName: 'PermissionService',
     },
     user: {
         file: join(__dirname, '../../proto/user.proto'),
         host: 'localhost',
         port: 50003,
         version: 'user.v1',
-        serviceName: 'UserService'
+        serviceName: 'UserService',
     }
 } as const
 
@@ -30,7 +47,7 @@ export interface ServiceConfig {
     file: string,
     url: string,
     packageVersion: string,
-    serviceName: string
+    serviceName: string,
 }
 
 export function  getServiceConfig(serviceName: ProtoKey, config: ConfigService): ServiceConfig {
@@ -42,7 +59,6 @@ export function  getServiceConfig(serviceName: ProtoKey, config: ConfigService):
         file,
         url: `${host}:${port}`,
         packageVersion,
-        serviceName: PROTO_PATHS[serviceName].serviceName
-    
+        serviceName: PROTO_PATHS[serviceName].serviceName,
     }
 }

@@ -4,7 +4,7 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
-import { getServiceConfig, ProtoKey } from '../../proto';
+import { getServiceConfig, GrpcServices, ProtoKey } from '../../proto';
 import { ConfigService } from '@nestjs/config';
 import { createGrpcClient } from './client.service';
 import { AbstractGrpcClient } from './abstract.grpc.client';
@@ -30,10 +30,16 @@ export class GrpcClientsService implements OnModuleInit {
         throw new Error(`gRPC client "${token}" not found`);
       }
       console.log(`Registry new client ${token}`)
-      const service = client.getService(cnf.serviceName);
-      this.services.set(token, service);
+      const getService = this.createGrpcGetter<GrpcServices>(client);
+      this.services.set(token, getService(cnf.serviceName as keyof GrpcServices));
     }
   }
+
+  createGrpcGetter<T extends Record<string, object>>(client: ClientGrpc) {
+    return <K extends keyof T>(name: K): T[K] =>
+      client.getService<T[K]>(name as string)
+  }
+
   get<T>(key: ProtoKey): T {
     const service = this.services.get(key);
 
@@ -42,12 +48,13 @@ export class GrpcClientsService implements OnModuleInit {
     }
     return service as T;
   }
-
+/*
   use<T extends Record<string, any>>(key: ProtoKey): AbstractGrpcClient<T> {
     const client = this.clients[key];
     if (!client) {
       throw new Error(`gRPC service "${key}" not registered`);
     }
+     
     return createGrpcClient<T>(client, key)
-  }
+  }*/
 }
