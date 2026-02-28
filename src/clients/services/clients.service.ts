@@ -29,7 +29,7 @@ export class GrpcClientsService implements OnModuleInit {
       if (!client) {
         throw new Error(`gRPC client "${token}" not found`);
       }
-
+      console.log(`Registry new client ${token}`)
       const service = client.getService(cnf.serviceName);
       this.services.set(token, service);
     }
