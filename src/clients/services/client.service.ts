@@ -1,11 +1,4 @@
-import {
-  Injectable,
-  Inject,
-  OnModuleInit,
-} from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
-import { getServiceConfig, ProtoKey } from '../../proto';
-import { ConfigService } from '@nestjs/config';
 import { AbstractGrpcClient } from './abstract.grpc.client';
 
 

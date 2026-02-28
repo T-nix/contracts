@@ -16,11 +16,9 @@ export class GrpcClientsService implements OnModuleInit {
   constructor(
     @Inject('GRPC_CONFIG')
     private readonly tokens: ProtoKey[],
-
     // dynamic clients injected here
     @Inject('GRPC_CLIENTS')
     private readonly clients: Record<string, ClientGrpc>,
-
     private readonly config: ConfigService
   ) {}
 

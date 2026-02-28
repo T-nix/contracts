@@ -38,7 +38,12 @@ export class GrpcModule {
                 },
                GrpcClientsService
             ],
-            exports: [GrpcClientFactory, GrpcClientsService]
+            exports: [
+                GrpcClientFactory, 
+                'GRPC_CONFIG',   // <-- MUST export
+                'GRPC_CLIENTS',  // <-- MUST export
+                GrpcClientsService
+            ]
         }
     }
 }
