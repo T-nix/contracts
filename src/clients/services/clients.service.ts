@@ -34,7 +34,7 @@ export class GrpcClientsService implements OnModuleInit {
       this.services.set(token, service);
     }
   }
-  get<T>(key: string): T {
+  get<T>(key: ProtoKey): T {
     const service = this.services.get(key);
 
     if (!service) {
@@ -43,12 +43,11 @@ export class GrpcClientsService implements OnModuleInit {
     return service as T;
   }
 
-  use<T extends Record<string, any>>(key: string): AbstractGrpcClient<T> {
-    const service = this.services.get(key);
-
-    if (!service) {
+  use<T extends Record<string, any>>(key: ProtoKey): AbstractGrpcClient<T> {
+    const client = this.clients[key];
+    if (!client) {
       throw new Error(`gRPC service "${key}" not registered`);
     }
-    return createGrpcClient<T>(service, key)
+    return createGrpcClient<T>(client, key)
   }
 }
