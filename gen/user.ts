@@ -19,7 +19,20 @@ export interface CreateUserRequest {
   phone: string;
 }
 
+export interface CreateAccountRequest {
+  type: string;
+  provider: string;
+  refreshToken?: string | undefined;
+  accessToken?: string | undefined;
+  expiredAt?: number | undefined;
+  userId: string;
+}
+
 export interface GetUserByIdRequest {
+  id: string;
+}
+
+export interface GetAccountByIdRequest {
   id: string;
 }
 
@@ -27,20 +40,42 @@ export interface GetUserByEmailRequest {
   email: string;
 }
 
+export interface FindAccountRequest {
+  type: string;
+  provider: string;
+  refreshToken?: string | undefined;
+  userId: string;
+}
+
 export interface UserResponse {
   user?: User | undefined;
+}
+
+export interface AccountResponse {
+  account?: Account | undefined;
 }
 
 export interface User {
   id: string;
   name?: string | undefined;
   email: string;
-  password: string;
   phone?: string | undefined;
   createdAt: Timestamp | undefined;
   updatedAt: Timestamp | undefined;
   isPhoneVerified: boolean;
   isEmailVerified: boolean;
+}
+
+export interface Account {
+  id: string;
+  type: string;
+  provider: string;
+  userId: string;
+  refreshToken?: string | undefined;
+  accessToken?: string | undefined;
+  expiredAt?: number | undefined;
+  createdAt: Timestamp | undefined;
+  updatedAt: Timestamp | undefined;
 }
 
 export const USER_V1_PACKAGE_NAME = "user.v1";
@@ -77,3 +112,40 @@ export function UserServiceControllerMethods() {
 }
 
 export const USER_SERVICE_NAME = "UserService";
+
+export interface AccountServiceClient {
+  createAccount(request: CreateAccountRequest): Observable<AccountResponse>;
+
+  getAccountById(request: GetAccountByIdRequest): Observable<AccountResponse>;
+
+  findAccounts(request: FindAccountRequest): Observable<AccountResponse>;
+}
+
+export interface AccountServiceController {
+  createAccount(
+    request: CreateAccountRequest,
+  ): Promise<AccountResponse> | Observable<AccountResponse> | AccountResponse;
+
+  getAccountById(
+    request: GetAccountByIdRequest,
+  ): Promise<AccountResponse> | Observable<AccountResponse> | AccountResponse;
+
+  findAccounts(request: FindAccountRequest): Promise<AccountResponse> | Observable<AccountResponse> | AccountResponse;
+}
+
+export function AccountServiceControllerMethods() {
+  return function (constructor: Function) {
+    const grpcMethods: string[] = ["createAccount", "getAccountById", "findAccounts"];
+    for (const method of grpcMethods) {
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcMethod("AccountService", method)(constructor.prototype[method], method, descriptor);
+    }
+    const grpcStreamMethods: string[] = [];
+    for (const method of grpcStreamMethods) {
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcStreamMethod("AccountService", method)(constructor.prototype[method], method, descriptor);
+    }
+  };
+}
+
+export const ACCOUNT_SERVICE_NAME = "AccountService";
