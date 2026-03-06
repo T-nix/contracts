@@ -10,13 +10,6 @@ export type GrpcServices = {
   AccountService: AccountServiceClient
 }
 
-export enum ServiceName1s {
-  'UserService' = 'UserServiceClient',
-  'AuthService' = 'AuthServiceClient',
-  'PermissionService' = 'PermissionServiceClient',
-  'AccountService' = 'AccountServiceClient'
-}
-
 export type ServiceNames = keyof GrpcServices;
 
 export interface GrpcClientConfig {
