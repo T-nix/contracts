@@ -1,20 +1,30 @@
 import { ConfigService } from "@nestjs/config";
 import { join } from "path";
-import { UserServiceClient } from "../../gen/user";
+import { AccountServiceClient, UserServiceClient } from "../../gen/user";
 import { AuthServiceClient } from "../../gen/auth";
 
 export type GrpcServices = {
   UserService: UserServiceClient,
   AuthService: AuthServiceClient,
-  PermissionService: any
+  PermissionService: any,
+  AccountService: AccountServiceClient
 }
+
+export enum ServiceName1s {
+  'UserService' = 'UserServiceClient',
+  'AuthService' = 'AuthServiceClient',
+  'PermissionService' = 'PermissionServiceClient',
+  'AccountService' = 'AccountServiceClient'
+}
+
+export type ServiceNames = keyof GrpcServices;
 
 export interface GrpcClientConfig {
     file: string
     host: string
     port: number
     version: string
-    serviceName: string
+    serviceName: ServiceNames[]
 }
 
 export const PROTO_PATHS: Record<string, GrpcClientConfig>= {
@@ -23,7 +33,7 @@ export const PROTO_PATHS: Record<string, GrpcClientConfig>= {
         host: 'localhost',
         port: 50001,
         version: 'auth.v1',
-        serviceName: 'AuthService',
+        serviceName: ['AuthService'],
     },
     
     permission: {
@@ -31,15 +41,16 @@ export const PROTO_PATHS: Record<string, GrpcClientConfig>= {
         host: 'localhost',
         port: 50002,
         version: 'permission.v1',
-        serviceName: 'PermissionService',
+        serviceName: ['PermissionService'],
     },
+
     user: {
         file: join(__dirname, '../../proto/user.proto'),
         host: 'localhost',
         port: 50003,
         version: 'user.v1',
-        serviceName: 'UserService',
-    }
+        serviceName: ['UserService', 'AccountService'],
+    },
 } as const
 
 export type ProtoKey = keyof typeof PROTO_PATHS;
@@ -47,7 +58,7 @@ export interface ServiceConfig {
     file: string,
     url: string,
     packageVersion: string,
-    serviceName: string,
+    serviceName: ServiceNames[],
 }
 
 export function  getServiceConfig(serviceName: ProtoKey, config: ConfigService): ServiceConfig {
