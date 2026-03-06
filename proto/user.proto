@@ -9,6 +9,11 @@ service UserService {
     rpc getUserById (GetUserByIdRequest) returns (UserResponse);
     rpc getUserByEmail (GetUserByEmailRequest) returns (UserResponse);
 }
+service AccountService {
+    rpc createAccount (CreateAccountRequest) returns (AccountResponse);
+    rpc getAccountById (GetAccountByIdRequest) returns (AccountResponse);
+    rpc findAccounts (FindAccountRequest) returns (AccountResponse);
+}
 
 message CreateUserRequest {
     string name = 1;
@@ -18,25 +23,63 @@ message CreateUserRequest {
     string phone = 5;
 }
 
+message CreateAccountRequest {
+    string type = 1;
+    string provider = 2;
+    optional string refreshToken = 3;
+    optional string accessToken = 4;
+    optional int32 expiredAt = 5;
+    string userId = 5;
+}
+
+
 message GetUserByIdRequest {
+    string id = 1;
+}
+
+message GetAccountByIdRequest {
     string id = 1;
 }
 
 message GetUserByEmailRequest {
     string email = 1;
 }
+
+message FindAccountRequest {
+    string type = 1;
+    string provider = 2;
+    optional string refreshToken = 3;
+    string userId = 5;
+}
+
 message UserResponse {
     optional User user = 1;
+}
+
+message AccountResponse {
+    optional Account account = 1;
 }
 
 message User {
     string id = 1;
     optional string name = 2;
     string email = 3;
-    string password = 4;
     optional string phone = 5;
     google.protobuf.Timestamp created_at = 6;
     google.protobuf.Timestamp updated_at = 7;
     bool is_phone_verified = 8;
     bool is_email_verified = 9;
+}
+
+message Account {
+    string id = 1;
+    string type = 1;
+    string provider = 2;
+    string userId = 5;
+    optional string refreshToken = 3;
+    optional string accessToken = 4;
+    optional int32 expiredAt = 5;
+
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
 }
