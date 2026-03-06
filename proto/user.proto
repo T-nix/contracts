@@ -29,7 +29,7 @@ message CreateAccountRequest {
     optional string refreshToken = 3;
     optional string accessToken = 4;
     optional int32 expiredAt = 5;
-    string userId = 5;
+    string userId = 6;
 }
 
 
@@ -49,7 +49,7 @@ message FindAccountRequest {
     string type = 1;
     string provider = 2;
     optional string refreshToken = 3;
-    string userId = 5;
+    string userId = 4;
 }
 
 message UserResponse {
@@ -73,13 +73,13 @@ message User {
 
 message Account {
     string id = 1;
-    string type = 1;
-    string provider = 2;
-    string userId = 5;
-    optional string refreshToken = 3;
-    optional string accessToken = 4;
-    optional int32 expiredAt = 5;
+    string type = 2;
+    string provider = 3;
+    string userId = 4;
+    optional string refreshToken = 5;
+    optional string accessToken = 6;
+    optional int32 expiredAt = 7;
 
-    google.protobuf.Timestamp created_at = 6;
-    google.protobuf.Timestamp updated_at = 7;
+    google.protobuf.Timestamp created_at = 8;
+    google.protobuf.Timestamp updated_at = 9;
 }
