@@ -4,16 +4,39 @@ import "user.proto";
 package auth.v1;
 
 service AuthService {
+    rpc RegisterUser (user.v1.CreateUserRequest) returns (RegisterUserResponse);
+    rpc LoginUser (LoginUserRequest) returns (LoginUserResponse);
+
     rpc SendOtp (SendOtpRequest) returns (SendOtpResponse);
     rpc VerifyOtp (VerifyOtpRequest) returns (VerifyOtpResponse);
-    rpc RegisterUser (user.v1.CreateUserRequest) returns (user.v1.UserResponse);
-    rpc LoginUser (LoginUserRequest) returns (user.v1.UserResponse);
     rpc RefreshToken (RefreshTokenRequest) returns (RefreshTokenResponse);
     rpc LogoutUser (LogoutUserRequest) returns (LogoutUserResponse);
     rpc ForgotPassword (ForgotPasswordRequest) returns (ForgotPasswordResponse);
     rpc ResetPassword (ResetPasswordRequest) returns (ResetPasswordResponse);
     rpc ProviderConnect (ProviderConnectRequest) returns (ProviderConnectResponse);
     rpc ProviderCallback (ProviderCallbackRequest) returns (ProviderCallbackResponse);
+}
+
+message RegisterUserResponse {
+    string nextStem = 1;
+    bool ok = 2;
+    optional TokenResponse token = 3;
+}
+
+message LoginUserRequest {
+    string email = 1;
+    string password = 2;
+}
+
+message LoginUserResponse {
+    bool ok = 1;
+    optional TokenResponse token = 2;
+    string nextStem = 1;
+}
+
+message TokenResponse {
+    string aceess_token = 1;
+    string refresh_token = 2;
 }
 
 message SendOtpRequest {
@@ -32,13 +55,9 @@ message VerifyOtpRequest {
 }
 
 message VerifyOtpResponse {
-    string aceess_token = 1;
-    string refresh_token = 2;
-}
-
-message LoginUserRequest {
-    string email = 1;
-    string password = 2;
+    bool ok = 1;
+    TokenResponse token = 2;
+    string nextStem = 1;
 }
 
 message RefreshTokenRequest {
