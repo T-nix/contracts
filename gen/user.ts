@@ -14,9 +14,10 @@ export const protobufPackage = "user.v1";
 export interface CreateUserRequest {
   name: string;
   email: string;
-  password: string;
+  password?: string | undefined;
   passwordConfirm?: string | undefined;
-  phone: string;
+  phone?: string | undefined;
+  picture?: string | undefined;
 }
 
 export interface CreateAccountRequest {
@@ -63,8 +64,8 @@ export interface UpdateFields {
 }
 
 export interface FindAccountRequest {
-  type: string;
-  provider: string;
+  type?: string | undefined;
+  provider?: string | undefined;
   refreshToken?: string | undefined;
   userId: string;
 }
