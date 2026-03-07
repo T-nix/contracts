@@ -37,7 +37,7 @@ export class GrpcClientsService implements OnModuleInit {
 
         const services = getService(svc)
 
-        this.services.set(token, services);
+        this.services.set(svc, services);
       }
     }
   }
