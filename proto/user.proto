@@ -8,6 +8,9 @@ service UserService {
     rpc createUser (CreateUserRequest) returns (UserResponse);
     rpc getUserById (GetUserByIdRequest) returns (UserResponse);
     rpc getUserByEmail (GetUserByEmailRequest) returns (UserResponse);
+    rpc getUser (GetUserRequest) returns (UserResponse);
+    rpc updateUser (UpdateUserRequest) returns (UserResponse);
+    rpc getUsers (GetUserRequest) returns (UsersResponse);
 }
 service AccountService {
     rpc createAccount (CreateAccountRequest) returns (AccountResponse);
@@ -32,7 +35,6 @@ message CreateAccountRequest {
     string userId = 6;
 }
 
-
 message GetUserByIdRequest {
     string id = 1;
 }
@@ -45,6 +47,28 @@ message GetUserByEmailRequest {
     string email = 1;
 }
 
+message GetUserRequest {
+    string id = 1;
+    string email = 2;
+    string phone = 3;
+}
+
+message UpdateUserRequest {
+    string id = 1;
+    UpdateFields fields = 2;
+}
+
+message UpdateFields {
+    optional string name = 1;
+    optional string email = 2;
+    optional string phone = 3;
+    optional string password = 4;
+    optional bool is_phone_verified = 5;
+    optional bool is_email_verified = 6;
+    optional bool is_twoFactor_enabled = 7;
+    optional string picture = 8;
+}
+
 message FindAccountRequest {
     string type = 1;
     string provider = 2;
@@ -54,6 +78,10 @@ message FindAccountRequest {
 
 message UserResponse {
     optional User user = 1;
+}
+
+message UsersResponse {
+    repeated User users = 1;
 }
 
 message AccountResponse {
@@ -69,7 +97,9 @@ message User {
     google.protobuf.Timestamp updated_at = 7;
     bool is_phone_verified = 8;
     bool is_email_verified = 9;
-    string password = 10;
+    bool is_twoFactor_enabled = 10;
+    string password = 11;
+    optional string picture = 12;
 }
 
 message Account {
