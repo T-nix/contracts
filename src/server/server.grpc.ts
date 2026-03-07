@@ -3,11 +3,13 @@ import { INestApplication } from '@nestjs/common'
 import { MicroserviceOptions, Transport } from '@nestjs/microservices'
 import { ConfigService } from '@nestjs/config'
 import { getServiceConfig, ProtoKey } from '../proto'
+import { GrpcSanitizeInterceptor } from '../interceptors'
 
 export async function  buildGRPCServer(app: INestApplication, config: ConfigService): Promise<void> {
     const serviceName = config.getOrThrow<ProtoKey>("GRPC_SERVICE")
     const service = getServiceConfig(serviceName, config)
-
+    
+    app.useGlobalInterceptors(new GrpcSanitizeInterceptor());
     app.connectMicroservice<MicroserviceOptions>({
         transport: Transport.GRPC,
         options: {
