@@ -41,9 +41,9 @@ export interface GetUserByEmailRequest {
 }
 
 export interface GetUserRequest {
-  id: string;
-  email: string;
-  phone: string;
+  id?: string | undefined;
+  email?: string | undefined;
+  phone?: string | undefined;
 }
 
 export interface UpdateUserRequest {
