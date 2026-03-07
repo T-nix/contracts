@@ -40,6 +40,28 @@ export interface GetUserByEmailRequest {
   email: string;
 }
 
+export interface GetUserRequest {
+  id: string;
+  email: string;
+  phone: string;
+}
+
+export interface UpdateUserRequest {
+  id: string;
+  fields: UpdateFields | undefined;
+}
+
+export interface UpdateFields {
+  name?: string | undefined;
+  email?: string | undefined;
+  phone?: string | undefined;
+  password?: string | undefined;
+  isPhoneVerified?: boolean | undefined;
+  isEmailVerified?: boolean | undefined;
+  isTwoFactorEnabled?: boolean | undefined;
+  picture?: string | undefined;
+}
+
 export interface FindAccountRequest {
   type: string;
   provider: string;
@@ -49,6 +71,10 @@ export interface FindAccountRequest {
 
 export interface UserResponse {
   user?: User | undefined;
+}
+
+export interface UsersResponse {
+  users: User[];
 }
 
 export interface AccountResponse {
@@ -64,7 +90,9 @@ export interface User {
   updatedAt: Timestamp | undefined;
   isPhoneVerified: boolean;
   isEmailVerified: boolean;
+  isTwoFactorEnabled: boolean;
   password: string;
+  picture?: string | undefined;
 }
 
 export interface Account {
@@ -87,6 +115,12 @@ export interface UserServiceClient {
   getUserById(request: GetUserByIdRequest): Observable<UserResponse>;
 
   getUserByEmail(request: GetUserByEmailRequest): Observable<UserResponse>;
+
+  getUser(request: GetUserRequest): Observable<UserResponse>;
+
+  updateUser(request: UpdateUserRequest): Observable<UserResponse>;
+
+  getUsers(request: GetUserRequest): Observable<UsersResponse>;
 }
 
 export interface UserServiceController {
@@ -95,11 +129,17 @@ export interface UserServiceController {
   getUserById(request: GetUserByIdRequest): Promise<UserResponse> | Observable<UserResponse> | UserResponse;
 
   getUserByEmail(request: GetUserByEmailRequest): Promise<UserResponse> | Observable<UserResponse> | UserResponse;
+
+  getUser(request: GetUserRequest): Promise<UserResponse> | Observable<UserResponse> | UserResponse;
+
+  updateUser(request: UpdateUserRequest): Promise<UserResponse> | Observable<UserResponse> | UserResponse;
+
+  getUsers(request: GetUserRequest): Promise<UsersResponse> | Observable<UsersResponse> | UsersResponse;
 }
 
 export function UserServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ["createUser", "getUserById", "getUserByEmail"];
+    const grpcMethods: string[] = ["createUser", "getUserById", "getUserByEmail", "getUser", "updateUser", "getUsers"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod("UserService", method)(constructor.prototype[method], method, descriptor);
