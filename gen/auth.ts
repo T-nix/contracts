@@ -29,7 +29,7 @@ export interface LoginUserResponse {
 }
 
 export interface TokenResponse {
-  aceessToken: string;
+  accessToken: string;
   refreshToken: string;
 }
 
