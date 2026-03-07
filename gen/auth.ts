@@ -12,7 +12,7 @@ import { CreateUserRequest } from "./user";
 export const protobufPackage = "auth.v1";
 
 export interface RegisterUserResponse {
-  nextStem: string;
+  nextStep: string;
   ok: boolean;
   token?: TokenResponse | undefined;
 }
@@ -25,7 +25,7 @@ export interface LoginUserRequest {
 export interface LoginUserResponse {
   ok: boolean;
   token?: TokenResponse | undefined;
-  nextStem: string;
+  nextStep: string;
 }
 
 export interface TokenResponse {
@@ -51,7 +51,7 @@ export interface VerifyOtpRequest {
 export interface VerifyOtpResponse {
   ok: boolean;
   token: TokenResponse | undefined;
-  nextStem: string;
+  nextStep: string;
 }
 
 export interface RefreshTokenRequest {
