@@ -1,4 +1,3 @@
-import { ConfigService } from "@nestjs/config";
 import { join } from "path";
 import { AccountServiceClient, UserServiceClient } from "../../gen/user";
 import { AuthServiceClient } from "../../gen/auth";
@@ -9,6 +8,7 @@ export type GrpcServices = {
   PermissionService: any,
   AccountService: AccountServiceClient
 }
+
 
 export type ServiceNames = keyof GrpcServices;
 
@@ -47,22 +47,3 @@ export const PROTO_PATHS: Record<string, GrpcClientConfig>= {
 } as const
 
 export type ProtoKey = keyof typeof PROTO_PATHS;
-export interface ServiceConfig {
-    file: string,
-    url: string,
-    packageVersion: string,
-    serviceName: ServiceNames[],
-}
-
-export function  getServiceConfig(serviceName: ProtoKey, config: ConfigService): ServiceConfig {
-    const host = config.get<string>(`grpc.${serviceName}.host}`, {infer: true}) || PROTO_PATHS[serviceName].host
-    const port = config.get<string>(`grpc.${serviceName}.port}`, {infer: true}) || PROTO_PATHS[serviceName].port
-    const file = config.get<string>(`grpc.${serviceName}.file}`, {infer: true}) || PROTO_PATHS[serviceName].file
-    const packageVersion = config.get<string>(`grpc.${serviceName}.version}`, {infer: true}) || PROTO_PATHS[serviceName].version
-    return {
-        file,
-        url: `${host}:${port}`,
-        packageVersion,
-        serviceName: PROTO_PATHS[serviceName].serviceName,
-    }
-}
