@@ -18,7 +18,7 @@ service AuthService {
 }
 
 message RegisterUserResponse {
-    string nextStem = 1;
+    string nextStep = 1;
     bool ok = 2;
     optional TokenResponse token = 3;
 }
@@ -31,7 +31,7 @@ message LoginUserRequest {
 message LoginUserResponse {
     bool ok = 1;
     optional TokenResponse token = 2;
-    string nextStem = 3;
+    string nextStep = 3;
 }
 
 message TokenResponse {
@@ -57,7 +57,7 @@ message VerifyOtpRequest {
 message VerifyOtpResponse {
     bool ok = 1;
     TokenResponse token = 2;
-    string nextStem = 3;
+    string nextStep = 3;
 }
 
 message RefreshTokenRequest {
