@@ -21,9 +21,10 @@ service AccountService {
 message CreateUserRequest {
     string name = 1;
     string email = 2;
-    string password = 3;
+    optional string password = 3;
     optional string password_confirm = 4;
-    string phone = 5;
+    optional string phone = 5;
+    optional string picture = 6;
 }
 
 message CreateAccountRequest {
@@ -72,8 +73,8 @@ message UpdateFields {
 }
 
 message FindAccountRequest {
-    string type = 1;
-    string provider = 2;
+    optional string type = 1;
+    optional string provider = 2;
     optional string refreshToken = 3;
     string userId = 4;
 }
