@@ -7,9 +7,31 @@
 /* eslint-disable */
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
-import { CreateUserRequest, UserResponse } from "./user";
+import { CreateUserRequest } from "./user";
 
 export const protobufPackage = "auth.v1";
+
+export interface RegisterUserResponse {
+  nextStem: string;
+  ok: boolean;
+  token?: TokenResponse | undefined;
+}
+
+export interface LoginUserRequest {
+  email: string;
+  password: string;
+}
+
+export interface LoginUserResponse {
+  ok: boolean;
+  token?: TokenResponse | undefined;
+  nextStem: string;
+}
+
+export interface TokenResponse {
+  aceessToken: string;
+  refreshToken: string;
+}
 
 export interface SendOtpRequest {
   identifier: string;
@@ -27,13 +49,9 @@ export interface VerifyOtpRequest {
 }
 
 export interface VerifyOtpResponse {
-  aceessToken: string;
-  refreshToken: string;
-}
-
-export interface LoginUserRequest {
-  email: string;
-  password: string;
+  ok: boolean;
+  token: TokenResponse | undefined;
+  nextStem: string;
 }
 
 export interface RefreshTokenRequest {
@@ -93,13 +111,13 @@ export interface ProviderCallbackResponse {
 export const AUTH_V1_PACKAGE_NAME = "auth.v1";
 
 export interface AuthServiceClient {
+  registerUser(request: CreateUserRequest): Observable<RegisterUserResponse>;
+
+  loginUser(request: LoginUserRequest): Observable<LoginUserResponse>;
+
   sendOtp(request: SendOtpRequest): Observable<SendOtpResponse>;
 
   verifyOtp(request: VerifyOtpRequest): Observable<VerifyOtpResponse>;
-
-  registerUser(request: CreateUserRequest): Observable<UserResponse>;
-
-  loginUser(request: LoginUserRequest): Observable<UserResponse>;
 
   refreshToken(request: RefreshTokenRequest): Observable<RefreshTokenResponse>;
 
@@ -115,13 +133,15 @@ export interface AuthServiceClient {
 }
 
 export interface AuthServiceController {
+  registerUser(
+    request: CreateUserRequest,
+  ): Promise<RegisterUserResponse> | Observable<RegisterUserResponse> | RegisterUserResponse;
+
+  loginUser(request: LoginUserRequest): Promise<LoginUserResponse> | Observable<LoginUserResponse> | LoginUserResponse;
+
   sendOtp(request: SendOtpRequest): Promise<SendOtpResponse> | Observable<SendOtpResponse> | SendOtpResponse;
 
   verifyOtp(request: VerifyOtpRequest): Promise<VerifyOtpResponse> | Observable<VerifyOtpResponse> | VerifyOtpResponse;
-
-  registerUser(request: CreateUserRequest): Promise<UserResponse> | Observable<UserResponse> | UserResponse;
-
-  loginUser(request: LoginUserRequest): Promise<UserResponse> | Observable<UserResponse> | UserResponse;
 
   refreshToken(
     request: RefreshTokenRequest,
@@ -151,10 +171,10 @@ export interface AuthServiceController {
 export function AuthServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = [
-      "sendOtp",
-      "verifyOtp",
       "registerUser",
       "loginUser",
+      "sendOtp",
+      "verifyOtp",
       "refreshToken",
       "logoutUser",
       "forgotPassword",
