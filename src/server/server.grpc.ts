@@ -9,8 +9,7 @@ export async function  buildGRPCServer(app: INestApplication, config: ConfigServ
     const serviceName = config.getOrThrow<ProtoKey>("GRPC_SERVICE")
     const service = getServiceConfig(serviceName, config)
     
-    app.useGlobalInterceptors(new GrpcSanitizeInterceptor());
-    app.connectMicroservice<MicroserviceOptions>({
+    const grpc = app.connectMicroservice<MicroserviceOptions>({
         transport: Transport.GRPC,
         options: {
             package: service.packageVersion,
@@ -25,6 +24,7 @@ export async function  buildGRPCServer(app: INestApplication, config: ConfigServ
             }
         }
     })
+    grpc.useGlobalInterceptors(new GrpcSanitizeInterceptor());
 
 	await app.startAllMicroservices()
 
