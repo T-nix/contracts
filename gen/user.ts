@@ -64,6 +64,7 @@ export interface User {
   updatedAt: Timestamp | undefined;
   isPhoneVerified: boolean;
   isEmailVerified: boolean;
+  password: string;
 }
 
 export interface Account {
