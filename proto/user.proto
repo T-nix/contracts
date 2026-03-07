@@ -48,9 +48,11 @@ message GetUserByEmailRequest {
 }
 
 message GetUserRequest {
-    string id = 1;
-    string email = 2;
-    string phone = 3;
+    oneof method {
+        string id = 1;
+        string email = 2;
+        string phone = 3;
+    }
 }
 
 message UpdateUserRequest {
