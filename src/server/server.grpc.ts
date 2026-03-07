@@ -20,7 +20,7 @@ export async function  buildGRPCServer(app: INestApplication, config: ConfigServ
                 longs: String,
                 enum: String,
                 default: true,
-                oneofs: true
+                oneofs: false
             }
         }
     })
