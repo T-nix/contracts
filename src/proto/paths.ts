@@ -5,9 +5,13 @@ import { AuthServiceClient } from "../../gen/auth";
 export type GrpcServices = {
   UserService: UserServiceClient,
   AuthService: AuthServiceClient,
-  PermissionService: any,
   AccountService: AccountServiceClient
   CSRService: any,
+  PermissionService: any,
+  RoleService: any,
+  DelegationService: any,
+  SubjectService: any,
+  PolicyConditionService: any,
 }
 
 
@@ -51,7 +55,7 @@ export const PROTO_PATHS: Record<string, GrpcClientConfig>= {
         host: 'localhost',
         port: 50004,
         version: 'csr.v1',
-        serviceName: ['CSRService'],
+        serviceName: ['CSRService', 'RoleService', 'DelegationService', 'SubjectService', 'PermissionService', 'PolicyConditionService'],
     },
 } as const
 
