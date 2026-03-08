@@ -1,17 +1,18 @@
 import { join } from "path";
 import { AccountServiceClient, UserServiceClient } from "../../gen/user";
 import { AuthServiceClient } from "../../gen/auth";
+import { CSRServiceClient, DelegationServiceClient, PermissionServiceClient, PolicyConditionServiceClient, RoleServiceClient, SubjectServiceClient } from "../../gen/csr";
 
 export type GrpcServices = {
   UserService: UserServiceClient,
   AuthService: AuthServiceClient,
   AccountService: AccountServiceClient
-  CSRService: any,
-  PermissionService: any,
-  RoleService: any,
-  DelegationService: any,
-  SubjectService: any,
-  PolicyConditionService: any,
+  CSRService: CSRServiceClient,
+  PermissionService: PermissionServiceClient,
+  RoleService: RoleServiceClient,
+  DelegationService: DelegationServiceClient,
+  SubjectService: SubjectServiceClient,
+  PolicyConditionService: PolicyConditionServiceClient,
 }
 
 
@@ -34,14 +35,6 @@ export const PROTO_PATHS: Record<string, GrpcClientConfig>= {
         serviceName: ['AuthService'],
     },
     
-    permission: {
-        file: join(__dirname, '../../proto/permission.proto'),
-        host: 'localhost',
-        port: 50002,
-        version: 'permission.v1',
-        serviceName: ['PermissionService'],
-    },
-
     user: {
         file: join(__dirname, '../../proto/user.proto'),
         host: 'localhost',
