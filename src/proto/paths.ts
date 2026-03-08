@@ -7,6 +7,7 @@ export type GrpcServices = {
   AuthService: AuthServiceClient,
   PermissionService: any,
   AccountService: AccountServiceClient
+  CSRService: any,
 }
 
 
@@ -43,6 +44,14 @@ export const PROTO_PATHS: Record<string, GrpcClientConfig>= {
         port: 50003,
         version: 'user.v1',
         serviceName: ['UserService', 'AccountService'],
+    },
+
+    csr: {
+        file: join(__dirname, '../../proto/csr.proto'),
+        host: 'localhost',
+        port: 50004,
+        version: 'csr.v1',
+        serviceName: ['CSRService'],
     },
 } as const
 

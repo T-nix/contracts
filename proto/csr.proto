@@ -1,0 +1,124 @@
+syntax = "proto3";
+
+package csr.v1;
+
+service CSRService {
+  rpc CheckPermission(CheckPermissionRequest) returns (CheckPermissionResponse);
+  rpc AssignRole(AssignRoleRequest) returns (AssignRoleResponse);
+  rpc CreateDelegation(CreateDelegationRequest) returns (CreateDelegationResponse);
+  rpc ListDelegations(ListDelegationsRequest) returns (ListDelegationsResponse);
+  rpc SyncPermissions(SyncPermissionsRequest) returns (SyncPermissionsResponse);
+  rpc GetPolicyVersion(GetPolicyVersionRequest) returns (GetPolicyVersionResponse);
+}
+
+message CheckPermissionRequest {
+  string subject_id = 1;
+  string permission_name = 2;
+  string scope_value = 3;
+  string actor_type = 4;
+}
+
+message CheckPermissionResponse {
+  bool allowed = 1;
+  string permission = 2;
+  string decision_reason = 3;
+  repeated DelegationEdge delegation_path = 4;
+  string effective_role = 5;
+  int32 depth_used = 6;
+}
+
+message AssignRoleRequest {
+  string subject_id = 1;
+  string role_code = 2;
+  string scope_value = 3;
+  bool is_admin = 4;
+}
+
+message AssignRoleResponse {
+  bool success = 1;
+  string message = 2;
+  SubjectRole subject_role = 3;
+}
+
+message CreateDelegationRequest {
+  string parent_subject_id = 1;
+  string child_subject_id = 2;
+  string role_code = 3;
+  string scope_value = 4;
+  int32 max_depth = 5;
+}
+
+message CreateDelegationResponse {
+  bool success = 1;
+  string message = 2;
+  Delegation delegation = 3;
+}
+
+message ListDelegationsRequest {
+  string subject_id = 1;
+  bool include_children = 2;
+  bool include_parents = 3;
+}
+
+message ListDelegationsResponse {
+  repeated Delegation delegations = 1;
+}
+
+message SyncPermissionsRequest {
+  string role_code = 1;
+  repeated PermissionAction permissions = 2;
+}
+
+message SyncPermissionsResponse {
+  bool success = 1;
+  string message = 2;
+  int32 updated_count = 3;
+}
+
+message GetPolicyVersionRequest {
+  string policy_name = 1;
+}
+
+message GetPolicyVersionResponse {
+  string version = 1;
+  string policy_name = 2;
+  bool is_active = 3;
+  repeated PolicyCondition conditions = 4;
+}
+
+message SubjectRole {
+  string id = 1;
+  string subject_id = 2;
+  string role_code = 3;
+  string scope_value = 4;
+  string assigned_at = 5;
+}
+
+message Delegation {
+  string id = 1;
+  string parent_subject_id = 2;
+  string child_subject_id = 3;
+  string role_code = 4;
+  string scope_value = 5;
+  int32 depth = 6;
+  string created_at = 7;
+}
+
+message DelegationEdge {
+  string from_subject_id = 1;
+  string to_subject_id = 2;
+  string role_name = 3;
+  string scope_value = 4;
+}
+
+message PermissionAction {
+  string resource = 1;
+  string action = 2;
+}
+
+message PolicyCondition {
+  string condition_type = 1;
+  string field = 2;
+  string operator = 3;
+  string value = 4;
+}

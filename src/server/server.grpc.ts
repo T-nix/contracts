@@ -24,7 +24,6 @@ export async function  buildGRPCServer(app: INestApplication, config: ConfigServ
             }
         }
     })
-    grpc.useGlobalInterceptors(new GrpcSanitizeInterceptor());
 
 	await app.startAllMicroservices()
 
