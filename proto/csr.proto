@@ -2,11 +2,50 @@ syntax = "proto3";
 
 package csr.v1;
 
+service RoleService {
+  rpc CreateRole(CreateRoleRequest) returns (CreateRoleResponse);
+  rpc GetAllRoles(GetAllRolesRequest) returns (GetAllRolesResponse);
+  rpc GetRole(GetRoleRequest) returns (GetRoleResponse);
+  rpc UpdateRole(UpdateRoleRequest) returns (UpdateRoleResponse);
+  rpc DeleteRole(DeleteRoleRequest) returns (DeleteRoleResponse);
+}
+
+service DelegationService {
+  rpc CreateDelegation(CreateDelegationRequest) returns (CreateDelegationResponse);
+  rpc GetAllDelegations(GetAllDelegationsRequest) returns (GetAllDelegationsResponse);
+  rpc GetDelegation(GetDelegationRequest) returns (GetDelegationResponse);
+  rpc UpdateDelegation(UpdateDelegationRequest) returns (UpdateDelegationResponse);
+  rpc DeleteDelegation(DeleteDelegationRequest) returns (DeleteDelegationResponse);
+  rpc ListDelegations(ListDelegationsRequest) returns (ListDelegationsResponse);
+}
+
+service SubjectService {
+  rpc CreateSubject(CreateSubjectRequest) returns (CreateSubjectResponse);
+  rpc GetAllSubjects(GetAllSubjectsRequest) returns (GetAllSubjectsResponse);
+  rpc GetSubject(GetSubjectRequest) returns (GetSubjectResponse);
+  rpc UpdateSubject(UpdateSubjectRequest) returns (UpdateSubjectResponse);
+  rpc DeleteSubject(DeleteSubjectRequest) returns (DeleteSubjectResponse);
+}
+
+service PermissionService {
+  rpc CreatePermission(CreatePermissionRequest) returns (CreatePermissionResponse);
+  rpc GetAllPermissions(GetAllPermissionsRequest) returns (GetAllPermissionsResponse);
+  rpc GetPermission(GetPermissionRequest) returns (GetPermissionResponse);
+  rpc UpdatePermission(UpdatePermissionRequest) returns (UpdatePermissionResponse);
+  rpc DeletePermission(DeletePermissionRequest) returns (DeletePermissionResponse);
+}
+
+service PolicyConditionService {
+  rpc CreatePolicyCondition(CreatePolicyConditionRequest) returns (CreatePolicyConditionResponse);
+  rpc GetAllPolicyConditions(GetAllPolicyConditionsRequest) returns (GetAllPolicyConditionsResponse);
+  rpc GetPolicyCondition(GetPolicyConditionRequest) returns (GetPolicyConditionResponse);
+  rpc UpdatePolicyCondition(UpdatePolicyConditionRequest) returns (UpdatePolicyConditionResponse);
+  rpc DeletePolicyCondition(DeletePolicyConditionRequest) returns (DeletePolicyConditionResponse);
+}
+
 service CSRService {
   rpc CheckPermission(CheckPermissionRequest) returns (CheckPermissionResponse);
   rpc AssignRole(AssignRoleRequest) returns (AssignRoleResponse);
-  rpc CreateDelegation(CreateDelegationRequest) returns (CreateDelegationResponse);
-  rpc ListDelegations(ListDelegationsRequest) returns (ListDelegationsResponse);
   rpc SyncPermissions(SyncPermissionsRequest) returns (SyncPermissionsResponse);
   rpc GetPolicyVersion(GetPolicyVersionRequest) returns (GetPolicyVersionResponse);
 }
@@ -121,4 +160,306 @@ message PolicyCondition {
   string field = 2;
   string operator = 3;
   string value = 4;
+}
+
+// Role messages
+message CreateRoleRequest {
+  string name = 1;
+  string code = 2;
+  int32 level = 3;
+  bool scope_required = 4;
+  string description = 5;
+}
+
+message CreateRoleResponse {
+  bool success = 1;
+  string message = 2;
+  Role role = 3;
+}
+
+message GetAllRolesRequest {
+  int32 level = 1;
+  bool scope_required = 2;
+}
+
+message GetAllRolesResponse {
+  repeated Role roles = 1;
+}
+
+message GetRoleRequest {
+  string id = 1;
+}
+
+message GetRoleResponse {
+  Role role = 1;
+}
+
+message UpdateRoleRequest {
+  string id = 1;
+  string name = 2;
+  string code = 3;
+  int32 level = 4;
+  bool scope_required = 5;
+  string description = 6;
+}
+
+message UpdateRoleResponse {
+  bool success = 1;
+  string message = 2;
+  Role role = 3;
+}
+
+message DeleteRoleRequest {
+  string id = 1;
+}
+
+message DeleteRoleResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message Role {
+  string id = 1;
+  string name = 2;
+  string code = 3;
+  int32 level = 4;
+  bool scope_required = 5;
+  string description = 6;
+  string created_at = 7;
+  string updated_at = 8;
+}
+
+// Delegation messages
+message GetAllDelegationsRequest {
+  string parent_subject_id = 1;
+  string child_subject_id = 2;
+  string role_id = 3;
+}
+
+message GetAllDelegationsResponse {
+  repeated Delegation delegations = 1;
+}
+
+message GetDelegationRequest {
+  string id = 1;
+}
+
+message GetDelegationResponse {
+  Delegation delegation = 1;
+}
+
+message UpdateDelegationRequest {
+  string id = 1;
+  string parent_subject_id = 2;
+  string child_subject_id = 3;
+  string role_code = 4;
+  string scope_value = 5;
+  int32 depth = 6;
+}
+
+message UpdateDelegationResponse {
+  bool success = 1;
+  string message = 2;
+  Delegation delegation = 3;
+}
+
+message DeleteDelegationRequest {
+  string id = 1;
+}
+
+message DeleteDelegationResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// Subject messages
+message CreateSubjectRequest {
+  string name = 1;
+  string type = 2;
+  bool is_active = 3;
+  map<string, string> metadata = 4;
+}
+
+message CreateSubjectResponse {
+  bool success = 1;
+  string message = 2;
+  Subject subject = 3;
+}
+
+message GetAllSubjectsRequest {
+  string type = 1;
+  bool is_active = 2;
+}
+
+message GetAllSubjectsResponse {
+  repeated Subject subjects = 1;
+}
+
+message GetSubjectRequest {
+  string id = 1;
+}
+
+message GetSubjectResponse {
+  Subject subject = 1;
+}
+
+message UpdateSubjectRequest {
+  string id = 1;
+  string name = 2;
+  string type = 3;
+  bool is_active = 4;
+  map<string, string> metadata = 5;
+}
+
+message UpdateSubjectResponse {
+  bool success = 1;
+  string message = 2;
+  Subject subject = 3;
+}
+
+message DeleteSubjectRequest {
+  string id = 1;
+}
+
+message DeleteSubjectResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message Subject {
+  string id = 1;
+  string name = 2;
+  string type = 3;
+  bool is_active = 4;
+  map<string, string> metadata = 5;
+  string created_at = 6;
+  string updated_at = 7;
+}
+
+// Permission messages
+message CreatePermissionRequest {
+  string name = 1;
+  string description = 2;
+}
+
+message CreatePermissionResponse {
+  bool success = 1;
+  string message = 2;
+  Permission permission = 3;
+}
+
+message GetAllPermissionsRequest {
+  string permission_name = 1;
+  string description = 2;
+}
+
+message GetAllPermissionsResponse {
+  repeated Permission permissions = 1;
+}
+
+message GetPermissionRequest {
+  string id = 1;
+}
+
+message GetPermissionResponse {
+  Permission permission = 1;
+}
+
+message UpdatePermissionRequest {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+}
+
+message UpdatePermissionResponse {
+  bool success = 1;
+  string message = 2;
+  Permission permission = 3;
+}
+
+message DeletePermissionRequest {
+  string id = 1;
+}
+
+message DeletePermissionResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message Permission {
+  string id = 1;
+  string name = 2;
+  string description = 3;
+  string created_at = 4;
+  string updated_at = 5;
+}
+
+// Policy Condition messages
+message CreatePolicyConditionRequest {
+  string role_code = 1;
+  string permission_name = 2;
+  string condition_type = 3;
+  string field = 4;
+  string operator = 5;
+  string value = 6;
+}
+
+message CreatePolicyConditionResponse {
+  bool success = 1;
+  string message = 2;
+  PolicyConditionResult condition = 3;
+}
+
+message GetAllPolicyConditionsRequest {
+  string role_code = 1;
+  string permission_name = 2;
+}
+
+message GetAllPolicyConditionsResponse {
+  repeated PolicyConditionResult conditions = 1;
+}
+
+message GetPolicyConditionRequest {
+  string id = 1;
+}
+
+message GetPolicyConditionResponse {
+  PolicyConditionResult condition = 1;
+}
+
+message UpdatePolicyConditionRequest {
+  string id = 1;
+  string role_code = 2;
+  string permission_name = 3;
+  string condition_type = 4;
+  string field = 5;
+  string operator = 6;
+  string value = 7;
+}
+
+message UpdatePolicyConditionResponse {
+  bool success = 1;
+  string message = 2;
+  PolicyConditionResult condition = 3;
+}
+
+message DeletePolicyConditionRequest {
+  string id = 1;
+}
+
+message DeletePolicyConditionResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message PolicyConditionResult {
+  string id = 1;
+  string role_code = 2;
+  string permission_name = 3;
+  string condition_type = 4;
+  string field = 5;
+  string operator = 6;
+  string value = 7;
+  string created_at = 8;
+  string updated_at = 9;
 }
