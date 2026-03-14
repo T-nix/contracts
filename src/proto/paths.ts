@@ -1,18 +1,20 @@
 import { join } from "path";
 import { AccountServiceClient, UserServiceClient } from "../../gen/user";
 import { AuthServiceClient } from "../../gen/auth";
-import { CSRServiceClient, DelegationServiceClient, PermissionServiceClient, PolicyConditionServiceClient, RoleServiceClient, SubjectServiceClient } from "../../gen/csr";
+import { PermissionServiceClient } from "../../gen/csr";
 
 export type GrpcServices = {
   UserService: UserServiceClient,
   AuthService: AuthServiceClient,
   AccountService: AccountServiceClient
-  CSRService: CSRServiceClient,
   PermissionService: PermissionServiceClient,
+  /*
+  CSRService: CSRServiceClient,
   RoleService: RoleServiceClient,
   DelegationService: DelegationServiceClient,
   SubjectService: SubjectServiceClient,
   PolicyConditionService: PolicyConditionServiceClient,
+  */
 }
 
 
