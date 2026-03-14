@@ -7,11 +7,16 @@ import "google/protobuf/timestamp.proto";
 
 service PermissionService {
     rpc CreatePermission (CreatePermissionRequest) returns (PermissionResponse);
+    rpc BulkCreatePermission (BulkCreatePermissionRequest) returns (PermissionsResponse);
     rpc FindAll (FindPermissionRequest) returns (PermissionsResponse);
     rpc FindOne (GetPermissionRequest) returns (PermissionResponse);
 
     rpc UpdatePermission (UpdatePermissionRequest) returns (PermissionResponse);
     rpc DeletePermission (GetPermissionRequest) returns (google.protobuf.Empty);
+}
+
+message BulkCreatePermissionRequest {
+    repeated CreatePermissionRequest data = 1;
 }
 
 message CreatePermissionRequest {
