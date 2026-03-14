@@ -48,7 +48,7 @@ export const PROTO_PATHS: Record<string, GrpcClientConfig>= {
         host: 'localhost',
         port: 50004,
         version: 'csr.v1',
-        serviceName: ['CSRService', 'RoleService', 'DelegationService', 'SubjectService', 'PermissionService', 'PolicyConditionService'],
+        serviceName: ['PermissionService'],
     },
 } as const
 
