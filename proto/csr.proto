@@ -203,7 +203,7 @@ service RuleService {
 
 
 message BulkCreateRuleRequest {
-    repeated CreatePolicyRequest data = 1;
+    repeated CreateRuleRequest data = 1;
 }
 
 message CreateRuleRequest {
