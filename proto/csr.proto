@@ -194,7 +194,7 @@ message FindPolicyRequest {
 
 service RuleService {
     rpc CreateRule (CreateRuleRequest) returns (RuleResponse);
-    rpc BulkCreateRule (BulkCreateRuleRequest) returns (PoliciesResponse);
+    rpc BulkCreateRule (BulkCreateRuleRequest) returns (RulesResponse);
     rpc FindAll (FindRuleRequest) returns (RulesResponse);
     rpc FindOne (GetByIdRequest) returns (RuleResponse);
     rpc UpdateRule (UpdateRuleRequest) returns (RuleResponse);
