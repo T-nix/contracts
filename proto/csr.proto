@@ -89,7 +89,7 @@ message CreateRoleRequest {
     bool canInherit = 4;
 }
 
-message UpdatePermissionRequest {
+message UpdateRoleRequest {
     string id = 1;
     UpdateRoleFields fields = 2;
 }
