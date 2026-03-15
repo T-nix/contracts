@@ -123,3 +123,130 @@ message FindRoleRequest {
     optional string status = 2;
     optional bool canInherit = 3;
 }
+
+service PolicyService {
+    rpc CreatePolicy (CreatePolicyRequest) returns (PolicyResponse);
+    rpc BulkCreatePolicy (BulkCreatePolicyRequest) returns (PoliciesResponse);
+    rpc FindAll (FindPolicyRequest) returns (PoliciesResponse);
+    rpc FindOne (GetByIdRequest) returns (PolicyResponse);
+
+    rpc UpdateRole (UpdatePolicyRequest) returns (PolicyResponse);
+    rpc DeleteRole (GetByIdRequest) returns (google.protobuf.Empty);
+}
+
+
+message BulkCreatePolicyRequest {
+    repeated CreatePolicyRequest data = 1;
+}
+
+message CreatePolicyRequest {
+    string service = 1;
+    string entity = 2;
+    string action = 3;
+    string entityField = 4;
+    string actionType = 5;
+    string valueEntity = 6;
+    string valueField = 7;
+}
+
+message UpdatePolicyRequest {
+    string id = 1;
+    UpdatePolicyFields fields = 2;
+}
+
+message UpdatePolicyFields {
+    optional string service = 1;
+    optional string entity = 2;
+    optional string action = 3;
+    optional string entityField = 4;
+    optional string actionType = 5;
+    optional string valueEntity = 6;
+    optional string valueField = 7;
+}
+
+message Policy {
+    string id = 1;
+    string service = 2;
+    string entity = 3;
+    string action = 4;
+    string entityField = 5;
+    string actionType = 6;
+    string valueEntity = 7;
+    string valueField = 8;
+    google.protobuf.Timestamp  createdAt = 9;
+    google.protobuf.Timestamp updatedAt = 10;
+}
+
+message PolicyResponse {
+    optional Policy data = 1;
+}
+
+message PoliciesResponse {
+    repeated Policy data = 1;
+}
+
+message FindPolicyRequest {
+    optional string service = 1;
+    optional string entity = 2;
+    optional string action = 3;
+}
+
+
+service RuleService {
+    rpc CreateRule (CreateRuleRequest) returns (RuleResponse);
+    rpc BulkCreateRule (BulkCreateRuleRequest) returns (PoliciesResponse);
+    rpc FindAll (FindRuleRequest) returns (RulesResponse);
+    rpc FindOne (GetByIdRequest) returns (RuleResponse);
+    rpc UpdateRule (UpdateRuleRequest) returns (RuleResponse);
+    rpc DeleteRule (GetByIdRequest) returns (google.protobuf.Empty);
+}
+
+
+message BulkCreateRuleRequest {
+    repeated CreatePolicyRequest data = 1;
+}
+
+message CreateRuleRequest {
+    string roleId = 1;
+    string permissionId = 2;
+    string policyId = 3;
+    string status = 4;
+    int32 version = 5;
+}
+
+message UpdateRuleRequest {
+    string id = 1;
+    UpdatePolicyFields fields = 2;
+}
+
+message UpdateRuleFields {
+    optional string status = 1;
+    optional int32 version = 2;
+}
+
+message Rule {
+    string id = 1;
+    string roleId = 2;
+    string permissionId = 3;
+    string policyId = 4;
+    string status = 5;
+    int32 version = 6;
+    google.protobuf.Timestamp  createdAt = 7;
+    google.protobuf.Timestamp updatedAt = 8;
+}
+
+message RuleResponse {
+    optional Rule data = 1;
+}
+
+message RulesResponse {
+    repeated Rule data = 1;
+}
+
+message FindRuleRequest {
+    optional string id = 1;
+    optional string roleId = 2;
+    optional string permissionId = 3;
+    optional string policyId = 4;
+    optional string status = 5;
+}
