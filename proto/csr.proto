@@ -57,10 +57,10 @@ message PermissionsResponse {
 }
 
 message FindPermissionRequest {
-    string service = 1;
-    string entity = 2;
-    string action = 3;
-    string status = 4;
+    optional string service = 1;
+    optional string entity = 2;
+    optional string action = 3;
+    optional string status = 4;
 }
 
 message GetByIdRequest {
@@ -119,7 +119,7 @@ message RolesResponse {
 }
 
 message FindRoleRequest {
-    string code = 1;
-    string status = 2;
-    bool canInherit = 3;
+    optional string code = 1;
+    optional string status = 2;
+    optional bool canInherit = 3;
 }
