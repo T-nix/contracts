@@ -9,10 +9,10 @@ service PermissionService {
     rpc CreatePermission (CreatePermissionRequest) returns (PermissionResponse);
     rpc BulkCreatePermission (BulkCreatePermissionRequest) returns (PermissionsResponse);
     rpc FindAll (FindPermissionRequest) returns (PermissionsResponse);
-    rpc FindOne (GetPermissionRequest) returns (PermissionResponse);
+    rpc FindOne (GetByIdRequest) returns (PermissionResponse);
 
     rpc UpdatePermission (UpdatePermissionRequest) returns (PermissionResponse);
-    rpc DeletePermission (GetPermissionRequest) returns (google.protobuf.Empty);
+    rpc DeletePermission (GetByIdRequest) returns (google.protobuf.Empty);
 }
 
 message BulkCreatePermissionRequest {
@@ -23,7 +23,7 @@ message CreatePermissionRequest {
     string service = 1;
     string entity = 2;
     string action = 3;
-    bool status = 4;
+    string status = 4;
 }
 
 message UpdatePermissionRequest {
@@ -35,14 +35,14 @@ message UpdateFields {
     optional string service = 1;
     optional string entity = 2;
     optional string action = 3;
-    optional bool status = 4;
+    optional string status = 4;
 }
 
 message Permission {
     string service = 1;
     string entity = 2;
     string action = 3;
-    bool status = 4;
+    string status = 4;
     string id = 5;
     google.protobuf.Timestamp  createdAt = 6;
     google.protobuf.Timestamp updatedAt = 7;
@@ -60,9 +60,66 @@ message FindPermissionRequest {
     string service = 1;
     string entity = 2;
     string action = 3;
-    bool status = 4;
+    string status = 4;
 }
 
-message GetPermissionRequest {
+message GetByIdRequest {
     string id = 1;
+}
+
+service RoleService {
+    rpc CreateRole (CreateRoleRequest) returns (RoleResponse);
+    rpc BulkCreateRole (BulkCreateRoleRequest) returns (RolesResponse);
+    rpc FindAll (FindRoleRequest) returns (RolesResponse);
+    rpc FindOne (GetByIdRequest) returns (RoleResponse);
+
+    rpc UpdateRole (UpdateRoleRequest) returns (RoleResponse);
+    rpc DeleteRole (GetByIdRequest) returns (google.protobuf.Empty);
+}
+
+
+message BulkCreateRoleRequest {
+    repeated CreateRoleRequest data = 1;
+}
+
+message CreateRoleRequest {
+    string code = 1;
+    string status = 2;
+    string description = 3;
+    bool canInherit = 4;
+}
+
+message UpdatePermissionRequest {
+    string id = 1;
+    UpdateRoleFields fields = 2;
+}
+
+message UpdateRoleFields {
+    optional bool canInherit = 1;
+    optional string description = 2;
+    optional string status = 3;
+}
+
+message Role {
+    string id = 1;
+    string code = 2;
+    optional string description = 3;
+    bool canInherit = 4;
+    string status = 5;
+    google.protobuf.Timestamp  createdAt = 6;
+    google.protobuf.Timestamp updatedAt = 7;
+}
+
+message RoleResponse {
+    optional Role data = 1;
+}
+
+message RolesResponse {
+    repeated Role data = 1;
+}
+
+message FindRoleRequest {
+    string code = 1;
+    string status = 2;
+    bool canInherit = 3;
 }
