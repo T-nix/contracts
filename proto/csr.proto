@@ -209,7 +209,7 @@ message BulkCreateRuleRequest {
 message CreateRuleRequest {
     string roleId = 1;
     string permissionId = 2;
-    string policyId = 3;
+    optional string policyId = 3;
     string status = 4;
     int32 version = 5;
 }
@@ -222,13 +222,14 @@ message UpdateRuleRequest {
 message UpdateRuleFields {
     optional string status = 1;
     optional int32 version = 2;
+    optional string policyId = 3;
 }
 
 message Rule {
     string id = 1;
     string roleId = 2;
     string permissionId = 3;
-    string policyId = 4;
+    optional string policyId = 4;
     string status = 5;
     int32 version = 6;
     google.protobuf.Timestamp  createdAt = 7;
