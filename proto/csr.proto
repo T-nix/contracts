@@ -216,7 +216,7 @@ message CreateRuleRequest {
 
 message UpdateRuleRequest {
     string id = 1;
-    UpdatePolicyFields fields = 2;
+    UpdateRuleFields fields = 2;
 }
 
 message UpdateRuleFields {
