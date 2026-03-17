@@ -30,8 +30,7 @@ export class GrpcClientsService implements OnModuleInit {
       if (!client) {
         throw new Error(`gRPC client "${token}" not found`);
       }
-
-      console.log(`Registry new client ${token}`)
+      
       for (const svc of cnf.serviceName) {
         const getService = this.createGrpcGetter<GrpcServices>(client);
 
