@@ -98,6 +98,7 @@ message UpdateRoleFields {
     optional bool canInherit = 1;
     optional string description = 2;
     optional string status = 3;
+    optional bool isDefault = 4;
 }
 
 message Role {
@@ -106,8 +107,9 @@ message Role {
     optional string description = 3;
     bool canInherit = 4;
     string status = 5;
-    google.protobuf.Timestamp  createdAt = 6;
-    google.protobuf.Timestamp updatedAt = 7;
+    bool isDefault = 6;
+    google.protobuf.Timestamp  createdAt = 7;
+    google.protobuf.Timestamp updatedAt = 8;
 }
 
 message RoleResponse {
@@ -122,6 +124,7 @@ message FindRoleRequest {
     optional string code = 1;
     optional string status = 2;
     optional bool canInherit = 3;
+    optional bool isDefault = 4;
 }
 
 service PolicyService {
@@ -130,8 +133,8 @@ service PolicyService {
     rpc FindAll (FindPolicyRequest) returns (PoliciesResponse);
     rpc FindOne (GetByIdRequest) returns (PolicyResponse);
 
-    rpc UpdateRole (UpdatePolicyRequest) returns (PolicyResponse);
-    rpc DeleteRole (GetByIdRequest) returns (google.protobuf.Empty);
+    rpc UpdatePolicy (UpdatePolicyRequest) returns (PolicyResponse);
+    rpc DeletePolicy (GetByIdRequest) returns (google.protobuf.Empty);
 }
 
 
@@ -250,4 +253,104 @@ message FindRuleRequest {
     optional string permissionId = 3;
     optional string policyId = 4;
     optional string status = 5;
+}
+
+service IdentityService {
+    rpc CreateIdentity (CreateIdentityRequest) returns (IdentityResponse);
+    rpc BulkCreateIdentity (BulkCreateIdentityRequest) returns (IdentitiesResponse);
+    rpc FindAll (FindIdentityRequest) returns (IdentitiesResponse);
+    rpc FindOne (GetByIdRequest) returns (IdentityResponse);
+    rpc UpdateIdentity (UpdateIdentityRequest) returns (IdentityResponse);
+    rpc DeleteIdentity (GetByIdRequest) returns (google.protobuf.Empty);
+}
+
+message BulkCreateIdentityRequest {
+    repeated CreateIdentityRequest data = 1;
+}
+
+message CreateIdentityRequest {
+    string userId = 1;
+    string roleId = 2;
+    optional string parentId = 3;
+    string status = 4;
+    optional string additional = 5;
+}
+
+message UpdateIdentityRequest {
+    string id = 1;
+    UpdateIdentityFields fields = 2;
+}
+
+message UpdateIdentityFields {
+    optional string roleId = 1;
+    optional string parentId = 2;
+    optional string status = 3;
+    optional string additional = 4;
+}
+
+message Identity {
+    string id = 1;
+    string userId = 2;
+    string roleId = 3;
+    optional string parentId = 4;
+    string status = 5;
+    optional string additional = 6;
+    google.protobuf.Timestamp  createdAt = 7;
+    google.protobuf.Timestamp updatedAt = 8;
+}
+
+message IdentityResponse {
+    optional Identity data = 1;
+}
+
+message IdentitiesResponse {
+    repeated Identity data = 1;
+}
+
+message FindIdentityRequest {
+    optional string id = 1;
+    optional string roleId = 2;
+    optional string parentId = 3;
+    optional string status = 4;
+}
+
+service HistoryService {
+    rpc CreateHistory (CreateHistoryRequest) returns (HistoryResponse);
+    rpc FindAll (FindHistoryRequest) returns (HistoriesResponse);
+    rpc FindOne (GetByIdRequest) returns (HistoryResponse);
+    rpc DeleteHistory (GetByIdRequest) returns (google.protobuf.Empty);
+}
+
+message CreateHistoryRequest {
+    string identityId = 1;
+    string type = 2;
+    string updatedBy = 3;
+    string changes = 4;
+    string reason = 5;
+}
+
+message History {
+    string id = 1;
+    string type = 2;
+    string updatedBy = 3;
+    string changes = 4;
+    string reason = 5;
+    google.protobuf.Timestamp  createdAt = 7;
+    google.protobuf.Timestamp updatedAt = 8;
+}
+
+message HistoryResponse {
+    optional History data = 1;
+}
+
+message HistoriesResponse {
+    repeated History data = 1;
+}
+
+message FindHistoryRequest {
+    optional string id = 1;
+    optional string type = 2;
+    optional string updatedBy = 3;
+    optional string changes = 4;
+    optional string reason = 5;
 }

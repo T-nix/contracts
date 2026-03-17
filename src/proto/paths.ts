@@ -1,7 +1,7 @@
 import { join } from "path";
 import { AccountServiceClient, UserServiceClient } from "../../gen/user";
 import { AuthServiceClient } from "../../gen/auth";
-import { PermissionServiceClient, PolicyServiceClient, RoleServiceClient, RuleServiceClient } from "../../gen/csr";
+import { HistoryServiceClient, IdentityServiceClient, PermissionServiceClient, PolicyServiceClient, RoleServiceClient, RuleServiceClient } from "../../gen/csr";
 
 export type GrpcServices = {
   UserService: UserServiceClient,
@@ -10,12 +10,9 @@ export type GrpcServices = {
   PermissionService: PermissionServiceClient,
   RoleService: RoleServiceClient,
   RuleService: RuleServiceClient,
-  PolicyService: PolicyServiceClient
-  /*
-  CSRService: CSRServiceClient,
-  DelegationService: DelegationServiceClient,
-  SubjectService: SubjectServiceClient,
-  */
+  PolicyService: PolicyServiceClient,
+  IdentityService: IdentityServiceClient,
+  HistoryService: HistoryServiceClient
 }
 
 
@@ -51,7 +48,7 @@ export const PROTO_PATHS: Record<string, GrpcClientConfig>= {
         host: 'localhost',
         port: 50004,
         version: 'csr.v1',
-        serviceName: ['PermissionService', 'RoleService', 'PolicyService', 'RuleService'],
+        serviceName: ['PermissionService', 'RoleService', 'PolicyService', 'RuleService', 'IdentityService', 'HistoryService'],
     },
 } as const
 
