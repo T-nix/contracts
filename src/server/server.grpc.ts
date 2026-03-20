@@ -7,7 +7,7 @@ import { GrpcSanitizeInterceptor } from '../interceptors'
 export type ServerOptions = {
     filers?: ExceptionFilter<any>[]
 }
-export async function  buildGRPCServer(app: INestApplication, config: ConfigService, options: ServerOptions): Promise<void> {
+export async function  buildGRPCServer(app: INestApplication, config: ConfigService, options?: ServerOptions): Promise<void> {
     const serviceName = config.getOrThrow<ProtoKey>("GRPC_SERVICE")
     const service = getServiceConfig(serviceName, config)
     
