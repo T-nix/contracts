@@ -1,11 +1,13 @@
 
-import { INestApplication } from '@nestjs/common'
+import { ExceptionFilter, INestApplication } from '@nestjs/common'
 import { MicroserviceOptions, Transport } from '@nestjs/microservices'
 import { ConfigService } from '@nestjs/config'
 import { getServiceConfig, ProtoKey } from '../proto'
 import { GrpcSanitizeInterceptor } from '../interceptors'
-
-export async function  buildGRPCServer(app: INestApplication, config: ConfigService): Promise<void> {
+export type ServerOptions = {
+    filers?: ExceptionFilter<any>[]
+}
+export async function  buildGRPCServer(app: INestApplication, config: ConfigService, options: ServerOptions): Promise<void> {
     const serviceName = config.getOrThrow<ProtoKey>("GRPC_SERVICE")
     const service = getServiceConfig(serviceName, config)
     
@@ -24,7 +26,9 @@ export async function  buildGRPCServer(app: INestApplication, config: ConfigServ
             }
         }
     })
-
+    if (options?.filers) {
+        app.useGlobalFilters(...options.filers);
+    }
 	await app.startAllMicroservices()
 
 	app.init()
