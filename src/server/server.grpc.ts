@@ -26,11 +26,12 @@ export async function  buildGRPCServer(app: INestApplication, config: ConfigServ
             }
         }
     })
-
-	await app.startAllMicroservices()
     if (options?.filers) {
         console.log('add new filters')
         app.useGlobalFilters(...options.filers);
+        grpc.useGlobalFilters(...options.filers);
     }
+	await app.startAllMicroservices()
+
 	app.init()
 }
