@@ -1,41 +1,25 @@
-import { ArgumentsHost, Catch, HttpException, HttpStatus, type ExceptionFilter } from "@nestjs/common";
-import { grpcToHttpStatus } from "./grpc-to-http-status";
-import { Response } from 'express'
+import { ArgumentsHost, Catch, RpcExceptionFilter, type ExceptionFilter } from "@nestjs/common";
+import { RpcException } from "@nestjs/microservices";
+import { throwError } from 'rxjs';
+import { Metadata } from '@grpc/grpc-js';
+import { RpcStatus } from "../rpc-status.enum";
 
 @Catch()
-export class GrpcExceptionFilter implements ExceptionFilter {
+export class GrpcExceptionFilter implements RpcExceptionFilter  {
     catch(exception: any, host: ArgumentsHost) {
-        const ctx = host.switchToHttp()
-        const response = ctx.getResponse<Response>()
-
-        if (this.isGrpcError(exception)) {
-            const httpStatus = grpcToHttpStatus[exception.code] || 500
-
-            return response.status(httpStatus).json({
-                statusCode: httpStatus,
-                message: exception.details || 'gRpc internal error'
-            })
+        const metadata = new Metadata();
+        const code = exception?.code  ?? RpcStatus.UNKNOWN
+        const message = exception?.message ?? 'UNKNOWN'
+        if (exception?.meta) {
+            metadata.add('details', JSON.stringify(exception.meta));
+        } else if (exception?.details) {
+            metadata.add('details', exception?.details);
         }
 
-        if ( exception instanceof HttpException) {
-            const httpStatus = exception.getStatus()
-            return response.status(httpStatus).json({
-                statusCode: httpStatus,
-                message: exception.message || 'gRpc internal server error'
-            })
-        }
-
-        return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-                message: 'Internal server error'
-            })
-    }
-
-    private isGrpcError(exception: any) {
-        return (
-            typeof exception === 'object' && 
-            'code' in exception && 
-            'details' in exception
-        )
+        return throwError(() => ({
+            code,
+            message,
+            metadata,
+        })); 
     }
 }
