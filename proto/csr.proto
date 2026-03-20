@@ -270,9 +270,9 @@ message BulkCreateIdentityRequest {
 
 message CreateIdentityRequest {
     string userId = 1;
-    string roleId = 2;
+    optional string roleId = 2;
     optional string parentId = 3;
-    string status = 4;
+    optional string status = 4;
     optional string additional = 5;
 }
 
