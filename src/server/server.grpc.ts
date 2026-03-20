@@ -38,7 +38,10 @@ export async function  buildHybridGRPCServer(app: INestApplication, config: Conf
 	app.init()
 }
 
-export async function  buildGRPCServer(AppModule: IEntryNestModule, config: ConfigService, options?: ServerOptions): Promise<void> {
+export async function  buildGRPCServer(AppModule: IEntryNestModule, options?: ServerOptions): Promise<void> {
+	const tmpApp = await NestFactory.create(AppModule)
+    const config = tmpApp.get(ConfigService)
+    
     const serviceName = config.getOrThrow<ProtoKey>("GRPC_SERVICE")
     const service = getServiceConfig(serviceName, config)
     const app = await NestFactory.createMicroservice(AppModule, {
