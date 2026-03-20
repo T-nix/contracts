@@ -1,13 +1,16 @@
 
-import { ExceptionFilter, INestApplication } from '@nestjs/common'
+import { ExceptionFilter, INestApplication, Type, DynamicModule, ForwardReference } from '@nestjs/common'
 import { MicroserviceOptions, Transport } from '@nestjs/microservices'
 import { ConfigService } from '@nestjs/config'
 import { getServiceConfig, ProtoKey } from '../proto'
-import { GrpcSanitizeInterceptor } from '../interceptors'
+import { NestFactory } from '@nestjs/core'
+
+type IEntryNestModule = Type<any> | DynamicModule | ForwardReference | Promise<IEntryNestModule>;
+
 export type ServerOptions = {
     filers?: ExceptionFilter<any>[]
 }
-export async function  buildGRPCServer(app: INestApplication, config: ConfigService, options?: ServerOptions): Promise<void> {
+export async function  buildHybridGRPCServer(app: INestApplication, config: ConfigService, options?: ServerOptions): Promise<void> {
     const serviceName = config.getOrThrow<ProtoKey>("GRPC_SERVICE")
     const service = getServiceConfig(serviceName, config)
     
@@ -27,11 +30,35 @@ export async function  buildGRPCServer(app: INestApplication, config: ConfigServ
         }
     })
     if (options?.filers) {
-        console.log('add new filters')
         app.useGlobalFilters(...options.filers);
         grpc.useGlobalFilters(...options.filers);
     }
 	await app.startAllMicroservices()
 
 	app.init()
+}
+
+export async function  buildGRPCServer(AppModule: IEntryNestModule, config: ConfigService, options?: ServerOptions): Promise<void> {
+    const serviceName = config.getOrThrow<ProtoKey>("GRPC_SERVICE")
+    const service = getServiceConfig(serviceName, config)
+    const app = await NestFactory.createMicroservice(AppModule, {
+        transport: Transport.GRPC,
+        options: {
+            package: service.packageVersion,
+            protoPath: service.file,
+            url: service.url,
+            loader: {
+                keepCase: false,
+                longs: String,
+                enum: String,
+                default: true,
+                oneofs: false
+            }
+        },
+    });    
+    
+    if (options?.filers) {
+        app.useGlobalFilters(...options.filers)
+    }
+	await app.listen()
 }
