@@ -4,6 +4,7 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices'
 import { ConfigService } from '@nestjs/config'
 import { getServiceConfig, ProtoKey } from '../proto'
 import { NestFactory } from '@nestjs/core'
+import { GrpcExceptionFilter } from '../utils'
 
 type IEntryNestModule = Type<any> | DynamicModule | ForwardReference | Promise<IEntryNestModule>;
 
@@ -59,9 +60,9 @@ export async function  buildGRPCServer(AppModule: IEntryNestModule, options?: Se
             }
         },
     });    
-    
-    if (options?.filers) {
-        app.useGlobalFilters(...options.filers)
+    const filter = options?.filers ? [new GrpcExceptionFilter(), ...options?.filers] : [new GrpcExceptionFilter()]
+    if (filter) {
+        app.useGlobalFilters(...filter)
     }
 	await app.listen()
 }
