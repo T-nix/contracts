@@ -5,7 +5,8 @@
   "types": "./dist/src/index.d.ts",
   "scripts": {
     "build": "tsc -p tsconfig.build.json && copyfiles proto/* dist/",
-    "generate": "npx protoc -I ./proto ./proto/*.proto --ts_proto_out=./gen --ts_proto_opt=nestJs=true,package=omit"
+    "generate": "npx protoc -I ./proto -I ./node_modules/google-proto-files ./proto/*.proto --ts_proto_out=./gen --ts_proto_opt=nestJs=true,package=omit,outputOptions=true",
+    "gateway:gen": "ts-node src/tools/generate-gateway.ts"
   },
   "type": "commonjs",
   "publishConfig": {
@@ -20,8 +21,10 @@
     "@grpc/grpc-js": "^1.14.3",
     "@types/express": "^5.0.6",
     "copyfiles": "^2.4.1",
+    "google-proto-files": "^5.0.1",
     "grpc-tools": "^1.13.1",
-    "ts-proto": "^2.11.5"
+    "ts-node": "^10.9.2",
+    "ts-proto": "^2.11.6"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.15",
@@ -30,6 +33,7 @@
     "@t-nix/prettier": "^1.0.5",
     "@types/node": "^25.5.0",
     "express": "^5.2.1",
+    "protobufjs": "^8.0.0",
     "rxjs": "^7.8.2",
     "typescript": "^5.9.3"
   },

@@ -4,17 +4,57 @@ import "user.proto";
 package auth.v1;
 
 service AuthService {
-    rpc RegisterUser (user.v1.CreateUserRequest) returns (RegisterUserResponse);
-    rpc LoginUser (LoginUserRequest) returns (LoginUserResponse);
+    rpc RegisterUser (user.v1.CreateUserRequest) returns (RegisterUserResponse) {
+        option (google.api.http) = {
+            post: "/auth/register"
+        };
+    };
+    rpc LoginUser (LoginUserRequest) returns (LoginUserResponse) {
+        option (google.api.http) = {
+            post: "/auth/login"
+        };
+    };
 
-    rpc SendOtp (SendOtpRequest) returns (SendOtpResponse);
-    rpc VerifyOtp (VerifyOtpRequest) returns (VerifyOtpResponse);
-    rpc RefreshToken (RefreshTokenRequest) returns (RefreshTokenResponse);
-    rpc LogoutUser (LogoutUserRequest) returns (LogoutUserResponse);
-    rpc ForgotPassword (ForgotPasswordRequest) returns (ForgotPasswordResponse);
-    rpc ResetPassword (ResetPasswordRequest) returns (ResetPasswordResponse);
-    rpc ProviderConnect (ProviderConnectRequest) returns (ProviderConnectResponse);
-    rpc ProviderCallback (ProviderCallbackRequest) returns (ProviderCallbackResponse);
+    rpc SendOtp (SendOtpRequest) returns (SendOtpResponse) {
+        option (google.api.http) = {
+            post: "/auth/otp"
+        };
+    };
+    rpc VerifyOtp (VerifyOtpRequest) returns (VerifyOtpResponse) {
+        option (google.api.http) = {
+            post: "/auth/verify-otp"
+        };
+    };
+    rpc RefreshToken (RefreshTokenRequest) returns (RefreshTokenResponse) {
+        option (google.api.http) = {
+            post: "/auth/refresh-token"
+        };
+    };
+    rpc LogoutUser (LogoutUserRequest) returns (LogoutUserResponse) {
+        option (google.api.http) = {
+            post: "/auth/logout"
+        };
+    };
+    rpc ForgotPassword (ForgotPasswordRequest) returns (ForgotPasswordResponse) {
+        option (google.api.http) = {
+            post: "/auth/forgot-password"
+        };
+    };
+    rpc ResetPassword (ResetPasswordRequest) returns (ResetPasswordResponse) {
+        option (google.api.http) = {
+            post: "/auth/reset-password"
+        };
+    };
+    rpc ProviderConnect (ProviderConnectRequest) returns (ProviderConnectResponse) {
+        option (google.api.http) = {
+            post: "/auth/provider-connect"
+        };
+    };
+    rpc ProviderCallback (ProviderCallbackRequest) returns (ProviderCallbackResponse) {
+        option (google.api.http) = {
+            post: "/auth/provider-callback"
+        };
+    };
 }
 
 message RegisterUserResponse {

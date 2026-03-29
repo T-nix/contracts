@@ -4,9 +4,15 @@ package csr.v1;
 
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
 
 service PermissionService {
-    rpc CreatePermission (CreatePermissionRequest) returns (PermissionResponse);
+    // CreatePermission creates a new permission.
+    rpc CreatePermission (CreatePermissionRequest) returns (PermissionResponse) {
+        option (google.api.http) = {
+            post: "/csr/permissions"
+        };
+    };
     rpc BulkCreatePermission (BulkCreatePermissionRequest) returns (PermissionsResponse);
     rpc FindAll (FindPermissionRequest) returns (PermissionsResponse);
     rpc FindOne (GetByIdRequest) returns (PermissionResponse);

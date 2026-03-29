@@ -3,19 +3,57 @@ syntax = "proto3";
 package user.v1;
 
 import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
 
 service UserService {
-    rpc createUser (CreateUserRequest) returns (UserResponse);
-    rpc getUserById (GetUserByIdRequest) returns (UserResponse);
-    rpc getUserByEmail (GetUserByEmailRequest) returns (UserResponse);
-    rpc getUser (GetUserRequest) returns (UserResponse);
-    rpc updateUser (UpdateUserRequest) returns (UserResponse);
-    rpc getUsers (GetUserRequest) returns (UsersResponse);
+    rpc createUser (CreateUserRequest) returns (UserResponse) {
+        option (google.api.http) = {
+            post: "/user/create"
+        };
+    };
+
+    rpc getUserById (GetUserByIdRequest) returns (UserResponse) {
+        option (google.api.http) = {
+            get: "/user/:id"
+        };
+    };
+    rpc getUserByEmail (GetUserByEmailRequest) returns (UserResponse) {
+        option (google.api.http) = {
+            get: "/user/email/:email"
+        };
+    };
+    rpc getUser (GetUserRequest) returns (UserResponse) {
+        option (google.api.http) = {
+            get: "/users"
+        };
+    };
+    rpc updateUser (UpdateUserRequest) returns (UserResponse) {
+        option (google.api.http) = {
+            patch: "/user/:id"
+        };
+    };
+    rpc getUsers (GetUserRequest) returns (UsersResponse) {
+        option (google.api.http) = {
+            get: "/users"
+        };
+    };
 }
 service AccountService {
-    rpc createAccount (CreateAccountRequest) returns (AccountResponse);
-    rpc getAccountById (GetAccountByIdRequest) returns (AccountResponse);
-    rpc findAccounts (FindAccountRequest) returns (AccountResponse);
+    rpc createAccount (CreateAccountRequest) returns (AccountResponse) {
+        option (google.api.http) = {
+            post: "/account/create"
+        };
+    };
+    rpc getAccountById (GetAccountByIdRequest) returns (AccountResponse) {
+        option (google.api.http) = {
+            get: "/account/:id"
+        };
+    };
+    rpc findAccounts (FindAccountRequest) returns (AccountResponse) {
+        option (google.api.http) = {
+            get: "/accounts"
+        };
+    };
 }
 
 message CreateUserRequest {
